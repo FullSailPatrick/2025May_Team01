@@ -9,47 +9,12 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
-      - name: Build commit list
-        id: build
-        run: |
-          LIST=$(echo "${{ toJSON(github.event.commits) }}" | jq -r '.[] | "- " + .id[0:7] + ": " + .message')
-          printf "list=%s\n" "$LIST" >> "$GITHUB_OUTPUT"
-
-          TS_RAW="${{ github.event.head_commit.timestamp }}"
-          TS=$(date -d "$TS_RAW" "+%Y-%m-%d %H:%M UTC")
-          echo "ts=$TS" >> "$GITHUB_OUTPUT"
-
-      - name: Post to Discord
+      - name: Send commit to Discord
         env:
-          WEBHOOK: https://discord.com/api/webhooks/1370268101391810570/jZzmrKgUiw0U-1dfV8NXTtuRuFyHEBSPRu8TViDcYPOaEOWlt27rMRse5DQ4PdY5nXOD
-          REPO: ${{ github.repository }}
-          BRANCH: ${{ github.ref_name }}
-          AUTHOR: ${{ github.event.pusher.name }}
-          LIST: ${{ steps.build.outputs.list }}
-          TS: ${{ steps.build.outputs.ts }}
-          LINK: ${{ github.event.compare }}
+          DISCORD_WEBHOOK: https://discord.com/api/webhooks/1370268101391810570/jZzmrKgUiw0U-1dfV8NXTtuRuFyHEBSPRu8TViDcYPOaEOWlt27rMRse5DQ4PdY5nXOD
         run: |
-          json=$(jq -n \
-            --arg ts "$TS" \
-            --arg branch "$BRANCH" \
-            --arg author "$AUTHOR" \
-            --arg repo "$REPO" \
-            --arg list "$LIST" \
-            --arg link "$LINK" \
-            '{
-              "content": (
-                "Date: \($ts)\n" +
-                "Branch: \($branch)\n" +
-                "Author: \($author)\n" +
-                "Repo: \($repo)\n\n" +
-                "\($list)\n\n" +
-                "\($link)"
-              )
-            }')
-          curl -s -H "Content-Type: application/json" -d "$json" "$WEBHOOK"
+          echo "Posting commit info to Discord..."
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{\"content\":\"🧾 **New Commit**\n🕒 Time: $(date -u)\n👤 User: ${{ github.actor }}\n📁 Repo: ${{ github.repository }}\n🌿 Branch: ${{ github.ref_name }}\n💬 Message: ${{ github.event.head_commit.message }}\"}" \
+          "$DISCORD_WEBHOOK"
