@@ -12,35 +12,26 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install jq
-        run: sudo apt-get install -y jq
-
-      - name: Gather commit info
-        id: commit_data
+      - name: Build commit data
         run: |
           echo "REPO=${{ github.repository }}" >> $GITHUB_ENV
           echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
           echo "AUTHOR=${{ github.event.pusher.name }}" >> $GITHUB_ENV
           echo "TIME=$(TZ='America/New_York' date '+%A %m-%d-%Y %I:%M %p EST')" >> $GITHUB_ENV
           echo "COMMIT=$(git log -1 --pretty=format:'%h %s')" >> $GITHUB_ENV
-          echo "FILES=$(git diff --name-only HEAD^ HEAD | paste -sd ', ' -)" >> $GITHUB_ENV
-          echo "STATS=$(git diff --stat HEAD^ HEAD | tr '\n' ' ')" >> $GITHUB_ENV
+          echo "LINK=https://github.com/${{ github.repository }}/commit/${{ github.sha }}" >> $GITHUB_ENV
 
       - name: Post to Discord
         env:
           WEBHOOK: https://discord.com/api/webhooks/1370268101391810570/jZzmrKgUiw0U-1dfV8NXTtuRuFyHEBSPRu8TViDcYPOaEOWlt27rMRse5DQ4PdY5nXOD
         run: |
-          echo '\`\`\`' > message.txt
           echo "✅ GitHub push detected" >> message.txt
           echo "Repo: $REPO" >> message.txt
           echo "Branch: $BRANCH" >> message.txt
           echo "Author: $AUTHOR" >> message.txt
           echo "Time: $TIME" >> message.txt
           echo "Commit: $COMMIT" >> message.txt
-          echo "" >> message.txt
-          echo "Files: $FILES" >> message.txt
-          echo "Stats: $STATS" >> message.txt
-          echo '\`\`\`' >> message.txt
+          echo "Link: $LINK" >> message.txt
 
           PAYLOAD=$(jq -Rs --arg content "$(cat message.txt)" '{content: $content}')
           curl -s -H "Content-Type: application/json" -d "$PAYLOAD" "$WEBHOOK"
