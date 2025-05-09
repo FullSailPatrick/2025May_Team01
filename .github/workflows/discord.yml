@@ -25,7 +25,7 @@ jobs:
 
     - name: Post to Discord
       env:
-        WEBHOOK: YOUR_DISCORD_WEBHOOK_URL       # <- replace
+        WEBHOOK: https://discord.com/api/webhooks/1370268101391810570/jZzmrKgUiw0U-1dfV8NXTtuRuFyHEBSPRu8TViDcYPOaEOWlt27rMRse5DQ4PdY5nXOD      # <- replace
         REPO:    ${{ github.repository }}
         BRANCH:  ${{ github.ref_name }}
         AUTHOR:  ${{ github.event.pusher.name }}
