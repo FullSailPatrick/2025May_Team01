@@ -3,47 +3,34 @@ name: Commit feed to Discord
 on:
   push:
     branches:
-      - "*"
+      - "**"
 
 jobs:
   notify:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
-      - name: Get commit and diff summary
-        id: summary
+      - name: Get commit data
+        id: get_data
         run: |
-          LIST=$(echo '${{ toJSON(github.event.commits) }}' |
-            jq -r '.[] | "- " + .id[0:7] + ": " + .message')
-          echo "list=$LIST" >> "$GITHUB_OUTPUT"
-
-          TS_RAW="${{ github.event.head_commit.timestamp }}"
-          TS_FORMATTED=$(date -d "$TS_RAW" "+%a, %b %d - %H:%M UTC")
-          echo "timestamp=$TS_FORMATTED" >> "$GITHUB_OUTPUT"
-
-          # Checkout to get diff stats
-          git clone --depth=2 https://github.com/${{ github.repository }} .
-          FILES_CHANGED=$(git diff --name-only HEAD~1 HEAD | wc -l)
-          LINES_ADDED=$(git diff --shortstat HEAD~1 HEAD | awk '{print $4}')
-          LINES_REMOVED=$(git diff --shortstat HEAD~1 HEAD | awk '{print $6}')
-          echo "files_changed=$FILES_CHANGED" >> "$GITHUB_OUTPUT"
-          echo "lines_added=${LINES_ADDED:-0}" >> "$GITHUB_OUTPUT"
-          echo "lines_removed=${LINES_REMOVED:-0}" >> "$GITHUB_OUTPUT"
+          echo "Repo=${{ github.repository }}" >> $GITHUB_ENV
+          echo "Branch=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo "Author=${{ github.event.pusher.name }}" >> $GITHUB_ENV
+          echo "Timestamp=$(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_ENV
+          
+          COMMIT_INFO=$(git log -1 --pretty=format:"%h %s")
+          echo "CommitInfo=$COMMIT_INFO" >> $GITHUB_ENV
+          
+          FILES=$(git diff --name-only HEAD^ HEAD)
+          echo "Files=$FILES" >> $GITHUB_ENV
+          
+          STATS=$(git diff --stat HEAD^ HEAD)
+          echo "Stats=$STATS" >> $GITHUB_ENV
 
       - name: Post to Discord
         env:
           WEBHOOK: https://discord.com/api/webhooks/1370268101391810570/jZzmrKgUiw0U-1dfV8NXTtuRuFyHEBSPRu8TViDcYPOaEOWlt27rMRse5DQ4PdY5nXOD
-          REPO: ${{ github.repository }}
-          BRANCH: ${{ github.ref_name }}
-          AUTHOR: ${{ github.event.pusher.name }}
-          TS: ${{ steps.summary.outputs.timestamp }}
-          LIST: ${{ steps.summary.outputs.list }}
-          FILES: ${{ steps.summary.outputs.files_changed }}
-          ADDED: ${{ steps.summary.outputs.lines_added }}
-          REMOVED: ${{ steps.summary.outputs.lines_removed }}
         run: |
-          CONTENT="Repo: $REPO\nDate: $TS\nBranch: $BRANCH\nAuthor: $AUTHOR\n\n$(echo "$LIST")\n\n$FILES files changed (+$ADDED / -$REMOVED lines)"
-          curl -s -H "Content-Type: application/json" -d "{\"content\": \"$CONTENT\"}" "$WEBHOOK"
+          PAYLOAD="Repo: $Repo\nBranch: $Branch\nAuthor: $Author\nTime: $Timestamp\nCommit: $CommitInfo\n\nFiles Changed:\n$Files\n\nStats:\n$Stats"
+          curl -s -H "Content-Type: application/json" \
+            -d "{\"content\": \"\`\`\`\n$PAYLOAD\n\`\`\`\"}" \
+            "$WEBHOOK"
