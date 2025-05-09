@@ -19,7 +19,7 @@ jobs:
           echo "Branch=${GITHUB_REF##*/}" >> $GITHUB_ENV
           echo "Author=${{ github.event.pusher.name }}" >> $GITHUB_ENV
           echo "Timestamp=$(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_ENV
-          echo "CommitInfo=$(git log -1 --pretty=format:'%h %s')" >> $GITHUB_ENV
+          echo "Commit=$(git log -1 --pretty=format:'%h %s%n%n%b')" >> $GITHUB_ENV
           echo "Files=$(git diff --name-only HEAD^ HEAD | paste -sd ', ' -)" >> $GITHUB_ENV
           echo "Stats=$(git diff --stat HEAD^ HEAD | tr '\n' ' ')" >> $GITHUB_ENV
 
@@ -27,6 +27,13 @@ jobs:
         env:
           WEBHOOK: https://discord.com/api/webhooks/1370268101391810570/jZzmrKgUiw0U-1dfV8NXTtuRuFyHEBSPRu8TViDcYPOaEOWlt27rMRse5DQ4PdY5nXOD
         run: |
-          echo -e "Repo: $Repo\nBranch: $Branch\nAuthor: $Author\nTime: $Timestamp\nCommit: $CommitInfo\n\nFiles:\n$Files\n\nStats:\n$Stats" > message.txt
+          echo "✅ Repo: $Repo" > message.txt
+          echo "✅ Branch: $Branch" >> message.txt
+          echo "✅ Author: $Author" >> message.txt
+          echo "✅ Time: $Timestamp" >> message.txt
+          echo -e "✅ Commit: $Commit\n" >> message.txt
+          echo "📂 Files: $Files" >> message.txt
+          echo "📊 Stats: $Stats" >> message.txt
+
           PAYLOAD=$(jq -Rs '{content: .}' < message.txt)
           curl -s -H "Content-Type: application/json" -d "$PAYLOAD" "$WEBHOOK"
