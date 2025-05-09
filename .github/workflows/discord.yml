@@ -23,10 +23,15 @@ jobs:
           COMMIT_INFO=$(git log -1 --pretty=format:"%h %s")
           echo "CommitInfo=$COMMIT_INFO" >> $GITHUB_ENV
 
-          FILES=$(git diff --name-only HEAD^ HEAD)
-          echo "Files=$FILES" >> $GITHUB_ENV
+          if [ $(git rev-list --count HEAD) -gt 1 ]; then
+            FILES=$(git diff --name-only HEAD^ HEAD)
+            STATS=$(git diff --stat HEAD^ HEAD)
+          else
+            FILES=$(git show --name-only --oneline)
+            STATS="Initial commit or single commit repo"
+          fi
 
-          STATS=$(git diff --stat HEAD^ HEAD)
+          echo "Files=$FILES" >> $GITHUB_ENV
           echo "Stats=$STATS" >> $GITHUB_ENV
 
       - name: Post to Discord
