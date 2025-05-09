@@ -3,53 +3,15 @@ name: Commit feed to Discord
 on:
   push:
     branches:
-      - "**"  # Trigger on all branches
+      - "**"
 
 jobs:
   notify:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
-      - name: Build commit list
-        id: build
-        run: |
-          # Extract each commit message with short SHA
-          LIST=$(echo "${{ toJSON(github.event.commits) }}" | jq -r '.[] | "* \(.id[0:7]) - \(.message)"')
-          echo "list=$LIST" >> "$GITHUB_OUTPUT"
-
-          # Convert timestamp to readable format
-          TS_RAW="${{ github.event.head_commit.timestamp }}"
-          TS=$(date -d "$TS_RAW" "+%Y-%m-%d %H:%M UTC")
-          echo "ts=$TS" >> "$GITHUB_OUTPUT"
-
       - name: Post to Discord
-        env:
-          WEBHOOK: https://discord.com/api/webhooks/1370268101391810570/jZzmrKgUiw0U-1dfV8NXTtuRuFyHEBSPRu8TViDcYPOaEOWlt27rMRse5DQ4PdY5nXOD
-          REPO: ${{ github.repository }}
-          BRANCH: ${{ github.ref_name }}
-          AUTHOR: ${{ github.event.pusher.name }}
-          LIST: ${{ steps.build.outputs.list }}
-          TS: ${{ steps.build.outputs.ts }}
-          LINK: ${{ github.event.compare }}
         run: |
-          json=$(jq -n \
-            --arg ts "$TS" \
-            --arg branch "$BRANCH" \
-            --arg author "$AUTHOR" \
-            --arg repo "$REPO" \
-            --arg list "$LIST" \
-            --arg link "$LINK" \
-            '{
-              content: (
-                "**Date:** \($ts)\n" +
-                "**Branch:** \($branch)\n" +
-                "**Author:** \($author)\n" +
-                "**Repo:** \($repo)\n\n" +
-                "**Commits:**\n\($list)\n\n" +
-                "<\($link)>"
-              )
-            }')
-          curl -s -H "Content-Type: application/json" -d "$json" "$WEBHOOK"
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content":"✅ GitHub push detected on `${{ github.repository }}` by `${{ github.actor }}` on branch `${{ github.ref }}`"}' \
+            https://discord.com/api/webhooks/1370268101391810570/jZzmrKgUiw0U-1dfV8NXTtuRuFyHEBSPRu8TViDcYPOaEOWlt27rMRse5DQ4PdY5nXOD
