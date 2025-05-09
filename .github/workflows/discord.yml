@@ -1,0 +1,49 @@
+name: Commit feed to Discord
+
+on:
+  push:                         # runs on every push
+    branches:
+      - "**"
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Build commit list
+      id: build
+      run: |
+        # Extract each commit message and short SHA
+        LIST=$(echo '${{ toJSON(github.event.commits) }}' |
+          jq -r '.[] | "- " + .id[0:7] + "  " + .message')
+        printf "list<<EOF\n%s\nEOF\n" "$LIST" >> "$GITHUB_OUTPUT"
+
+        # Convert head-commit timestamp to readable UTC
+        TS_RAW="${{ github.event.head_commit.timestamp }}"
+        TS=$(date -u -d "$TS_RAW" '+%Y-%m-%d %H:%M UTC')
+        echo "ts=$TS" >> "$GITHUB_OUTPUT"
+
+    - name: Post to Discord
+      env:
+        WEBHOOK: YOUR_DISCORD_WEBHOOK_URL       # <- replace
+        REPO:    ${{ github.repository }}
+        BRANCH:  ${{ github.ref_name }}
+        AUTHOR:  ${{ github.event.pusher.name }}
+        LIST:    ${{ steps.build.outputs.list }}
+        TS:      ${{ steps.build.outputs.ts }}
+        LINK:    ${{ github.event.compare }}
+      run: |
+        json=$(jq -n --arg ts "$TS" \
+                       --arg branch "$BRANCH" \
+                       --arg author "$AUTHOR" \
+                       --arg repo "$REPO" \
+                       --arg list "$LIST" \
+                       --arg link "$LINK" \
+        '{content:
+          "Date: "   + $ts + "\n" +
+          "Branch: " + $branch + "\n" +
+          "Author: " + $author + "\n" +
+          "Repo: "   + $repo + "\n" +
+          $list      + "\n" +
+          $link }')
+        curl -s -H "Content-Type: application/json" -d "$json" "$WEBHOOK"
