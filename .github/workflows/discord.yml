@@ -9,6 +9,9 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: Get commit data
         id: get_data
         run: |
@@ -16,13 +19,13 @@ jobs:
           echo "Branch=${GITHUB_REF##*/}" >> $GITHUB_ENV
           echo "Author=${{ github.event.pusher.name }}" >> $GITHUB_ENV
           echo "Timestamp=$(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_ENV
-          
+
           COMMIT_INFO=$(git log -1 --pretty=format:"%h %s")
           echo "CommitInfo=$COMMIT_INFO" >> $GITHUB_ENV
-          
+
           FILES=$(git diff --name-only HEAD^ HEAD)
           echo "Files=$FILES" >> $GITHUB_ENV
-          
+
           STATS=$(git diff --stat HEAD^ HEAD)
           echo "Stats=$STATS" >> $GITHUB_ENV
 
