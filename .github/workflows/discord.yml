@@ -11,48 +11,42 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
 
-      - name: Ensure jq is available
-        run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Install jq
+        run: sudo apt-get install -y jq
 
-      - name: Collect commit data
+      - name: Gather commit info
+        id: commit_data
         run: |
-          REPO="${{ github.repository }}"
-          BRANCH="${GITHUB_REF##*/}"
-          AUTHOR="${{ github.event.pusher.name }}"
-          TIME=$(TZ="America/New_York" date '+%A %d-%m-%Y %I:%M %p %Z')
-          SHA=$(git log -1 --pretty=format:'%h')
-          COMMIT=$(git log -1 --pretty=format:'%s%n%b')
-          FILES=$(git diff --name-only HEAD~1 HEAD)
-          STATS=$(git diff --shortstat HEAD~1 HEAD)
-          URL="https://github.com/$REPO/commit/$(git log -1 --pretty=format:'%H')"
+          echo "REPO=${{ github.repository }}" >> $GITHUB_ENV
+          echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo "AUTHOR=${{ github.event.pusher.name }}" >> $GITHUB_ENV
+          echo "TIME=$(TZ='America/New_York' date '+%A %m-%d-%Y %I:%M %p EST')" >> $GITHUB_ENV
 
-          {
-            echo "✅ GitHub push detected on $REPO"
-            echo "Branch: $BRANCH"
-            echo "Author: $AUTHOR"
-            echo "Time: $TIME"
-            echo -e "Commit: $SHA\n$COMMIT"
-            echo ""
-            echo "Files:"
-            echo "$FILES"
-            echo ""
-            echo "Stats:"
-            echo "$STATS"
-            echo ""
-            echo "View: $URL"
-          } > message.txt
+          COMMIT=$(git log -1 --pretty=format:"%h %s")
+          echo "COMMIT=$COMMIT" >> $GITHUB_ENV
+
+          FILES=$(git diff --name-only HEAD^ HEAD | paste -sd ', ' -)
+          echo "FILES=$FILES" >> $GITHUB_ENV
+
+          STATS=$(git diff --stat HEAD^ HEAD | tr '\n' ' ')
+          echo "STATS=$STATS" >> $GITHUB_ENV
 
       - name: Post to Discord
         env:
           WEBHOOK: https://discord.com/api/webhooks/1370268101391810570/jZzmrKgUiw0U-1dfV8NXTtuRuFyHEBSPRu8TViDcYPOaEOWlt27rMRse5DQ4PdY5nXOD
         run: |
-          if [ -s message.txt ]; then
-            PAYLOAD=$(jq -Rs '{content: "```" + . + "```"}' < message.txt)
-            curl -s -H "Content-Type: application/json" -d "$PAYLOAD" "$WEBHOOK"
-          else
-            echo "Error: message.txt is empty"
-            exit 1
-          fi
+          CONTENT="✅ GitHub push detected
+
+Repo: $REPO  
+Branch: $BRANCH  
+Author: $AUTHOR  
+Time: $TIME  
+Commit: $COMMIT  
+
+Files: $FILES  
+Stats: $STATS"
+
+          curl -s -H "Content-Type: application/json" \
+            -d "{\"content\": \"\`\`\`\n$CONTENT\n\`\`\`\"}" \
+            "$WEBHOOK"
