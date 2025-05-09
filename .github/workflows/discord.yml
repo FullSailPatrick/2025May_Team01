@@ -11,29 +11,40 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
-      - name: Get commit data
-        id: get_data
+      - name: Collect commit data
+        id: vars
         run: |
-          echo "Repo=${{ github.repository }}" >> $GITHUB_ENV
-          echo "Branch=${GITHUB_REF##*/}" >> $GITHUB_ENV
-          echo "Author=${{ github.event.pusher.name }}" >> $GITHUB_ENV
-          echo "Timestamp=$(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_ENV
-          echo "Commit=$(git log -1 --pretty=format:'%h %s%n%n%b')" >> $GITHUB_ENV
-          echo "Files=$(git diff --name-only HEAD^ HEAD | paste -sd ', ' -)" >> $GITHUB_ENV
-          echo "Stats=$(git diff --stat HEAD^ HEAD | tr '\n' ' ')" >> $GITHUB_ENV
+          echo "REPO=${{ github.repository }}" >> $GITHUB_ENV
+          echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo "AUTHOR=${{ github.event.pusher.name }}" >> $GITHUB_ENV
+          echo "TIME=$(TZ='America/New_York' date '+%A %d-%m-%Y %H:%M %Z')" >> $GITHUB_ENV
+          echo "SHA=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
+          echo "COMMIT=$(git log -1 --pretty=format:'%s%n%b')" >> $GITHUB_ENV
+          echo "FILES=$(git diff --name-only HEAD~1 HEAD | paste -sd '\\n' -)" >> $GITHUB_ENV
+          echo "STATS=$(git diff --shortstat HEAD~1 HEAD)" >> $GITHUB_ENV
 
       - name: Post to Discord
         env:
           WEBHOOK: https://discord.com/api/webhooks/1370268101391810570/jZzmrKgUiw0U-1dfV8NXTtuRuFyHEBSPRu8TViDcYPOaEOWlt27rMRse5DQ4PdY5nXOD
         run: |
-          echo "✅ Repo: $Repo" > message.txt
-          echo "✅ Branch: $Branch" >> message.txt
-          echo "✅ Author: $Author" >> message.txt
-          echo "✅ Time: $Timestamp" >> message.txt
-          echo -e "✅ Commit: $Commit\n" >> message.txt
-          echo "📂 Files: $Files" >> message.txt
-          echo "📊 Stats: $Stats" >> message.txt
+          echo '✅ GitHub push detected on '"$REPO" > message.txt
+          echo "Branch: $BRANCH" >> message.txt
+          echo "Author: $AUTHOR" >> message.txt
+          echo "Time: $TIME" >> message.txt
+          echo "Commit:" >> message.txt
+          echo "$SHA" >> message.txt
+          echo "$COMMIT" >> message.txt
+          echo "" >> message.txt
+          echo "Files:" >> message.txt
+          echo "$FILES" >> message.txt
+          echo "" >> message.txt
+          echo "Stats:" >> message.txt
+          echo "$STATS" >> message.txt
+          echo "" >> message.txt
+          echo "View: https://github.com/$REPO/commit/$SHA" >> message.txt
 
-          PAYLOAD=$(jq -Rs '{content: .}' < message.txt)
+          PAYLOAD=$(jq -Rs '{content: "```" + . + "```"}' < message.txt)
           curl -s -H "Content-Type: application/json" -d "$PAYLOAD" "$WEBHOOK"
