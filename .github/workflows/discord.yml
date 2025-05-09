@@ -14,19 +14,23 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Ensure jq is available
+        run: sudo apt-get update && sudo apt-get install -y jq
+
       - name: Collect commit data
         run: |
           REPO="${{ github.repository }}"
           BRANCH="${GITHUB_REF##*/}"
           AUTHOR="${{ github.event.pusher.name }}"
-          TIME=$(TZ="America/New_York" date '+%A %d-%m-%Y %H:%M %Z')
+          TIME=$(TZ="America/New_York" date '+%A %d-%m-%Y %I:%M %p %Z')
           SHA=$(git log -1 --pretty=format:'%h')
           COMMIT=$(git log -1 --pretty=format:'%s%n%b')
           FILES=$(git diff --name-only HEAD~1 HEAD)
           STATS=$(git diff --shortstat HEAD~1 HEAD)
+          URL="https://github.com/$REPO/commit/$(git log -1 --pretty=format:'%H')"
 
           {
-            echo '✅ GitHub push detected on '"$REPO"
+            echo "✅ GitHub push detected on $REPO"
             echo "Branch: $BRANCH"
             echo "Author: $AUTHOR"
             echo "Time: $TIME"
@@ -38,12 +42,17 @@ jobs:
             echo "Stats:"
             echo "$STATS"
             echo ""
-            echo "View: https://github.com/$REPO/commit/$SHA"
+            echo "View: $URL"
           } > message.txt
 
       - name: Post to Discord
         env:
           WEBHOOK: https://discord.com/api/webhooks/1370268101391810570/jZzmrKgUiw0U-1dfV8NXTtuRuFyHEBSPRu8TViDcYPOaEOWlt27rMRse5DQ4PdY5nXOD
         run: |
-          PAYLOAD=$(jq -Rs '{content: "```" + . + "```"}' < message.txt)
-          curl -s -H "Content-Type: application/json" -d "$PAYLOAD" "$WEBHOOK"
+          if [ -s message.txt ]; then
+            PAYLOAD=$(jq -Rs '{content: "```" + . + "```"}' < message.txt)
+            curl -s -H "Content-Type: application/json" -d "$PAYLOAD" "$WEBHOOK"
+          else
+            echo "Error: message.txt is empty"
+            exit 1
+          fi
