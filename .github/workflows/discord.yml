@@ -12,33 +12,27 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Get commit data
-        id: get_data
+      - name: Collect commit metadata
+        id: meta
         run: |
-          echo "Repo=${{ github.repository }}" >> $GITHUB_ENV
-          echo "Branch=${GITHUB_REF##*/}" >> $GITHUB_ENV
-          echo "Author=${{ github.event.pusher.name }}" >> $GITHUB_ENV
-          echo "Timestamp=$(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_ENV
+          echo "REPO=${{ github.repository }}" >> $GITHUB_ENV
+          echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo "AUTHOR=${{ github.event.pusher.name }}" >> $GITHUB_ENV
+          echo "TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_ENV
 
-          COMMIT_INFO=$(git log -1 --pretty=format:"%h %s")
-          echo "CommitInfo=$COMMIT_INFO" >> $GITHUB_ENV
+          FILES=$(git diff --name-only HEAD^ HEAD | paste -sd "," -)
+          echo "FILES=$FILES" >> $GITHUB_ENV
 
-          if [ $(git rev-list --count HEAD) -gt 1 ]; then
-            FILES=$(git diff --name-only HEAD^ HEAD)
-            STATS=$(git diff --stat HEAD^ HEAD)
-          else
-            FILES=$(git show --name-only --oneline)
-            STATS="Initial commit or single commit repo"
-          fi
+          STATS=$(git diff --stat HEAD^ HEAD | tr '\n' ' ')
+          echo "STATS=$STATS" >> $GITHUB_ENV
 
-          echo "Files=$FILES" >> $GITHUB_ENV
-          echo "Stats=$STATS" >> $GITHUB_ENV
+          COMMIT=$(git log -1 --pretty=format:"%h %s")
+          echo "COMMIT=$COMMIT" >> $GITHUB_ENV
 
-      - name: Post to Discord
+      - name: Send to Discord
         env:
           WEBHOOK: https://discord.com/api/webhooks/1370268101391810570/jZzmrKgUiw0U-1dfV8NXTtuRuFyHEBSPRu8TViDcYPOaEOWlt27rMRse5DQ4PdY5nXOD
         run: |
-          PAYLOAD="Repo: $Repo\nBranch: $Branch\nAuthor: $Author\nTime: $Timestamp\nCommit: $CommitInfo\n\nFiles Changed:\n$Files\n\nStats:\n$Stats"
-          curl -s -H "Content-Type: application/json" \
-            -d "{\"content\": \"\`\`\`\n$PAYLOAD\n\`\`\`\"}" \
-            "$WEBHOOK"
+          CONTENT="Repo: $REPO\nBranch: $BRANCH\nAuthor: $AUTHOR\nTime: $TIMESTAMP\nCommit: $COMMIT\n\nFiles: $FILES\nStats: $STATS"
+          JSON=$(jq -n --arg content "$CONTENT" '{content: $content}')
+          curl -s -H "Content-Type: application/json" -d "$JSON" "$WEBHOOK"
