@@ -2,36 +2,43 @@ name: Commit feed to Discord
 
 on:
   push:
-    branches:
-      - "**"
+    branches: ["**"]
 
 jobs:
   notify:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Build commit data
+      - name: Get commit data
+        id: get_data
         run: |
-          echo "REPO=${{ github.repository }}" >> $GITHUB_ENV
-          echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-          echo "AUTHOR=${{ github.event.pusher.name }}" >> $GITHUB_ENV
-          echo "TIME=$(TZ='America/New_York' date '+%A %m-%d-%Y %I:%M %p EST')" >> $GITHUB_ENV
-          echo "COMMIT=$(git log -1 --pretty=format:'%h %s')" >> $GITHUB_ENV
-          echo "LINK=https://github.com/${{ github.repository }}/commit/${{ github.sha }}" >> $GITHUB_ENV
+          echo "Repo=${{ github.repository }}"        >> $GITHUB_ENV
+          echo "Branch=${GITHUB_REF##*/}"             >> $GITHUB_ENV
+          echo "Author=${{ github.event.pusher.name }}" >> $GITHUB_ENV
+          echo "Timestamp=$(date -u '+%A %m-%d-%Y %I:%M %p UTC')" >> $GITHUB_ENV
+          echo "CommitInfo=$(git log -1 --pretty=format:'%h %s')"  >> $GITHUB_ENV
+          echo "Link=${{ github.event.compare }}"     >> $GITHUB_ENV
 
       - name: Post to Discord
         env:
-          WEBHOOK: https://discord.com/api/webhooks/1370268101391810570/jZzmrKgUiw0U-1dfV8NXTtuRuFyHEBSPRu8TViDcYPOaEOWlt27rMRse5DQ4PdY5nXOD
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          echo "✅ GitHub push detected" >> message.txt
-          echo "Repo: $REPO" >> message.txt
-          echo "Branch: $BRANCH" >> message.txt
-          echo "Author: $AUTHOR" >> message.txt
-          echo "Time: $TIME" >> message.txt
-          echo "Commit: $COMMIT" >> message.txt
-          echo "Link: $LINK" >> message.txt
+          if [ -z "$WEBHOOK" ]; then
+            echo "Webhook not set"; exit 1
+          fi
 
-          PAYLOAD=$(jq -Rs --arg content "$(cat message.txt)" '{content: $content}')
+          cat > message.txt <<EOF
+:white_check_mark: GitHub push detected
+Repo: $Repo
+Branch: $Branch
+Author: $Author
+Time: $Timestamp
+Commit: $CommitInfo
+Link: $Link
+EOF
+
+          PAYLOAD=$(jq -Rs '{content: .}' < message.txt)
           curl -s -H "Content-Type: application/json" -d "$PAYLOAD" "$WEBHOOK"
