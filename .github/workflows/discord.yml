@@ -29,8 +29,7 @@ jobs:
           if [ -z "$WEBHOOK" ]; then
             echo "Webhook not set"; exit 1
           fi
-
-          cat > message.txt <<EOF
+          cat > message.txt <<'EOF'
 :white_check_mark: GitHub push detected
 Repo: $Repo
 Branch: $Branch
