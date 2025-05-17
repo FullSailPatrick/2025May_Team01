@@ -31,14 +31,14 @@ jobs:
         WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       run: |
         cat > message.txt <<'EOF'
-:white_check_mark: GitHub push detected
-Repo: $Repo
-Branch: $Branch
-Author: $Author
-Time: $Timestamp
-Commit: $CommitInfo
-Link: $Link
-EOF
+        :white_check_mark: GitHub push detected
+        Repo: $Repo
+        Branch: $Branch
+        Author: $Author
+        Time: $Timestamp
+        Commit: $CommitInfo
+        Link: $Link
+        EOF
 
         PAYLOAD=$(jq -Rs '{content: .}' < message.txt)
         curl -s \
