@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    namespace = "com.example.test"
+    namespace = "com.example.pnp2_newproject"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.test"
-        minSdk = 34
+        applicationId = "com.example.pnp2_newproject"
+        minSdk = 24
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
