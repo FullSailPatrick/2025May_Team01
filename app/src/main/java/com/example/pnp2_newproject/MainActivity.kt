@@ -30,6 +30,5 @@ class MainActivity : AppCompatActivity()
         panel02 = findViewById(R.id.panel02)
         panel03 = findViewById(R.id.panel03)
 
-        setupPanelInteractions()
     }
 }
