@@ -1,0 +1,62 @@
+name: Commit feed to Discord
+
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1-- Check out the repo so we can inspect the commit
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # 2-- Collect everything we need for the message
+      - name: Get commit data
+        id: gather
+        run: |
+          # basic facts
+          echo "Repo=${{ github.repository }}"                >> $GITHUB_ENV
+          echo "Branch=${GITHUB_REF##*/}"                     >> $GITHUB_ENV
+          echo "Author=${{ github.event.pusher.name }}"       >> $GITHUB_ENV
+          echo "Timestamp=$(date -u '+%Y-%m-%d %H:%M:%S UTC')">> $GITHUB_ENV
+          echo "Link=${{ github.event.compare }}"             >> $GITHUB_ENV
+
+          # commit subject (hash + first line)
+          SUBJECT=$(git log -1 --pretty=format:'%h %s')
+          echo "CommitSubject=$SUBJECT"                       >> $GITHUB_ENV
+
+          # **extended description / body**
+          BODY=$(git log -1 --pretty=format:'%b' | sed 's/[[:space:]]*$//')
+          echo "CommitBody<<__BODY__"                         >> $GITHUB_ENV
+          echo "$BODY"                                        >> $GITHUB_ENV
+          echo "__BODY__"                                     >> $GITHUB_ENV
+
+      # 3-- Build a nice plain-text block, then POST it to Discord
+      - name: Post to Discord
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          # write message.txt
+          {
+            echo ':white_check_mark: GitHub push detected'
+            echo "Repo:   $Repo"
+            echo "Branch: $Branch"
+            echo "Author: $Author"
+            echo "Time:   $Timestamp"
+            echo "Commit: $CommitSubject"
+            # only include body if not empty
+            if [ -n "$CommitBody" ]; then
+              echo '———'
+              echo "$CommitBody"
+            fi
+            echo "Link:   $Link"
+          } > message.txt
+
+          # send
+          PAYLOAD=$(jq -Rs '{content: .}' < message.txt)
+          curl -s -H "Content-Type: application/json" \
+               -d "$PAYLOAD" "$WEBHOOK"
