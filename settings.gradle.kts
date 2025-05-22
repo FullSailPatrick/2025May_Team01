@@ -19,5 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "FLASH TIME"
+rootProject.name = "PnP2_NewProject"
 include(":app")
+ 

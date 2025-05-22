@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.flashtime"
+    namespace = "com.example.pnp2_newproject"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.flashtime"
+        applicationId = "com.example.pnp2_newproject"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
