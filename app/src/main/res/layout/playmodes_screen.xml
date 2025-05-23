@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".PlayModesScreen">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,39 +17,50 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <FrameLayout
-            android:id="@+id/panel01"
+            android:id="@+id/panel00"
             android:layout_width="match_parent"
-            android:layout_height="243dp"
-            android:background="@drawable/panel_pic2">
+            android:layout_height="50dp">
             <Button
-                android:id="@+id/button5"
+                android:id="@+id/backBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="Back" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/panel01"
+            android:layout_width="match_parent"
+            android:layout_height="225dp"
+            android:background="@drawable/panel_pic2">
+            <Button
+                android:id="@+id/questModeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quest Mode" />
         </FrameLayout>
 
         <FrameLayout
             android:id="@+id/panel02"
             android:layout_width="match_parent"
-            android:layout_height="245dp"
+            android:layout_height="235dp"
             android:background="@drawable/panel_pic">
             <Button
-                android:id="@+id/button6"
+                android:id="@+id/freePlayModeBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="Free Play Mode" />
         </FrameLayout>
 
         <FrameLayout
             android:id="@+id/panel03"
             android:layout_width="match_parent"
-            android:layout_height="243dp"
+            android:layout_height="225dp"
             android:background="@drawable/bg_panel03">
         <Button
-            android:id="@+id/button7"
+            android:id="@+id/flashModeBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button"/>
+            android:text="Flash Mode"/>
          </FrameLayout>
 
 </LinearLayout>

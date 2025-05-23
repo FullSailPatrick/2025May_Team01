@@ -1,24 +1,20 @@
 package com.example.pnp2_newproject
+
 import android.os.Bundle
-import android.widget.FrameLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-
-class MainActivity : AppCompatActivity()
+class GamePlayScreen : AppCompatActivity()
 {
-    //for the "panels"
-    lateinit var panel01 : FrameLayout
-    lateinit var panel02 : FrameLayout
-    lateinit var panel03 : FrameLayout
+    //code here
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.gameplay_screen)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main))
         { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -26,9 +22,7 @@ class MainActivity : AppCompatActivity()
             insets
         }
 
-        panel01 = findViewById(R.id.panel01)
-        panel02 = findViewById(R.id.panel02)
-        panel03 = findViewById(R.id.panel03)
+        //code here
 
     }
 }
