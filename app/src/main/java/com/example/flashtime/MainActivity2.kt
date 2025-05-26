@@ -1,45 +1,45 @@
-package org.geeksforgeeks.demo
+package com.example.flashtime
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.flashtime.MainActivity
+import com.example.pnp2_newproject.MainActivity
+import com.example.pnp2_newproject.R
 
-class SecondActivity : AppCompatActivity() {
-    // define the global variable
-    // Add button Move to next Activity and previous Activity
-    private lateinit var next_button: Button
-    private lateinit var previous_button: Button
+enum class CreateScreen()
+{
+    HoleInTheWall(),
+    Hangman(),
+    FlashCards()
+}
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+class MainActivity2 : AppCompatActivity()
+{
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_second)
+        setContentView(R.layout.activity_main2)
 
-        // by ID we can use each component which id is assign in xml
-        // file use findViewById() to get the both Button and textview
-        next_button = findViewById(R.id.next_button)
-        previous_button = findViewById(R.id.prev_button)
+        val imageButton = findViewById<ImageButton>(R.id.HomeFromCreate)
+        val buttonView = findViewById<Button>(R.id.FlashCards)
 
-        // add click listener
-        next_button.setOnClickListener {
-            // Intents are objects of the android.content.Intent type. Your code can send them to the Android system defining
-            // the components you are targeting. Intent to start an activity called ThirdActivity with the following code.
-            val intent = Intent(this, ThirdActivity::class.java)
-            // start the activity connect to the specified class
+        buttonView.setOnClickListener()
+        {
+            val intent: Intent = Intent(this, MainActivity3::class.java)
             startActivity(intent)
         }
 
-        // add click listener
-        previous_button.setOnClickListener {
-            // Intents are objects of the android.content.Intent type. Your code can send them to the Android system defining
-            // the components you are targeting. Intent to start an activity called FirstActivity with the following code
-            val intent = Intent(this, MainActivity::class.java)
-            // start the activity connect to the specified class
+        imageButton.setOnClickListener()
+        {
+            val intent: Intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
     }
 }
+
