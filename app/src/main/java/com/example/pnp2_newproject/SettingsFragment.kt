@@ -11,15 +11,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
-        val goBackPref : Preference? = findPreference("go_back")
-        goBackPref?.setOnPreferenceClickListener {
-            val intent = Intent(activity,MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            startActivity(intent)
-            activity?.finish()
-            true
-        }
-
         val themePref = findPreference<ListPreference>("day_night")
         themePref?.setOnPreferenceChangeListener{_,newValue ->
             when(newValue) {
@@ -29,6 +20,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
             true
         }
+
     }
 
 }

@@ -3,6 +3,5 @@
     <style name="Base.Theme.PnP2_NewProject" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <item name="android:colorBackground">@color/darker_night</item>
-        <item name="colorPrimary">@color/logo_green</item>
     </style>
 </resources>
