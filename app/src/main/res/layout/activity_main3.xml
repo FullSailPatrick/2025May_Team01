@@ -40,6 +40,7 @@
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="25dp"
+        android:contentDescription="Back To Create"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="?attr/homeAsUpIndicator"
@@ -52,8 +53,8 @@
         android:layout_marginStart="160dp"
         android:layout_marginBottom="16dp"
         android:text="Home"
-        android:backgroundTint="@color/logo_green"
-        android:textColor="@color/white"
+        android:backgroundTint="@color/logo_yellow"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -63,6 +64,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="16dp"
+        android:contentDescription="Add To Favorites"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/btn_star"

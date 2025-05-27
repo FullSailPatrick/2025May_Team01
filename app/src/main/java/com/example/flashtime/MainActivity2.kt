@@ -11,18 +11,12 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.pnp2_newproject.MainActivity
 import com.example.pnp2_newproject.R
 
-enum class CreateScreen()
-{
-    HoleInTheWall(),
-    Hangman(),
-    FlashCards()
-}
-
 class MainActivity2 : AppCompatActivity()
 {
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_main2)
 
         val imageButton = findViewById<ImageButton>(R.id.HomeFromCreate)
@@ -38,6 +32,13 @@ class MainActivity2 : AppCompatActivity()
         {
             val intent: Intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main))
+        { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
 
     }

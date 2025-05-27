@@ -15,6 +15,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="25dp"
         android:backgroundTint="@color/logo_green"
+        android:contentDescription="Back To Home"
         app:layout_constraintHorizontal_bias="0.205"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
