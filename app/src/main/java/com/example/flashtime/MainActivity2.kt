@@ -17,7 +17,7 @@ class MainActivity2 : AppCompatActivity()
     {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main2)
+        setContentView(R.layout.create_screen)
 
         val imageButton = findViewById<ImageButton>(R.id.HomeFromCreate)
         val buttonView = findViewById<Button>(R.id.FlashCards)

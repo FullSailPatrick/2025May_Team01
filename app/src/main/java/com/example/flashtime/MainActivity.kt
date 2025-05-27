@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity()
     {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.home_screen)
 
         val buttonView = findViewById<Button>(R.id.Create)
 

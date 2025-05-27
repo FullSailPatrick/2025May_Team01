@@ -13,6 +13,9 @@
         android:theme="@style/Theme.PnP2_NewProject"
         tools:targetApi="31">
         <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".GamePlayScreen"
             android:exported="false" />
         <activity

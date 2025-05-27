@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <PreferenceCategory
+        app:title="Settings">
+
+        <ListPreference
+            android:defaultValue="3"
+            android:dialogTitle="@string/remind_to_take_a_break"
+            android:entries="@array/pref_remind_me_to_take_a_break"
+            android:entryValues="@array/pref_duration"
+            android:key="@string/key_upload_quality"
+            android:summary="@string/remind_me"
+            android:title="@string/remind_me" />
+
+        <ListPreference
+            android:key="@string/day_night"
+            android:dialogTitle="@string/theme_changer"
+            android:entries="@array/pref_theme_choices"
+            android:entryValues="@array/pref_choices"
+            android:defaultValue="system"
+            android:title="@string/change_theme" />
+
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
