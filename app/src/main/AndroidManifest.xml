@@ -16,11 +16,22 @@
             android:name=".GamePlayScreen"
             android:exported="false" />
         <activity
+            android:name="com.example.flashtime.MainActivity3"
+            android:exported="false"
+            android:parentActivityName="com.example.flashtime.MainActivity2"/>
+        <activity
             android:name=".QuestScreen"
             android:exported="false" />
         <activity
+            android:name="com.example.flashtime.MainActivity2"
+            android:exported="true"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".PlayModesScreen"
-            android:exported="true">
+            android:exported="true"/>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
