@@ -5,11 +5,11 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".HomeScreen"
     android:background="@color/background_night">
 
     <ImageButton
-        android:id="@+id/HomeFromCreate"
+        android:id="@+id/backToHome"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"

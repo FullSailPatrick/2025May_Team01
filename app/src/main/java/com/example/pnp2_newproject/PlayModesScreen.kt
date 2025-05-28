@@ -42,26 +42,26 @@ class PlayModesScreen : AppCompatActivity()
         flashButton = findViewById<Button>(R.id.flashModeBtn)
 
         //set click listener for buttons
-      // backButton.setOnClickListener()
-      // {
-      //     val intent = Intent(this, //Cant access homeScreen branch from this branch; Add here after everything is merged)
-      //     startActivity(intent)
-      // }
+        backButton.setOnClickListener()
+        {
+            val intent = Intent(this, HomeScreen::class.java)
+            startActivity(intent)
+        }
        questButton.setOnClickListener()
        {
            val intent = Intent(this, QuestScreen::class.java)
            startActivity(intent)
        }
-      // freePlayButton.setOnClickListener()
-      // {
-      //     val intent = Intent(this, //Cant access freePlayScreen branch from this branch; Add here after everything is merged)
-      //     startActivity(intent)
-      // }
-      // flashButton.setOnClickListener()
-      // {
-      //     val intent = Intent(this, //Cant access FlashScreen branch from this branch; Add here after everything is merged)
-      //     startActivity(intent)
-      // }
+       //freePlayButton.setOnClickListener()
+       //{
+       //    val intent = Intent(this, FreePlayScreen::class.java)
+       //    startActivity(intent)
+       //}
+       //flashButton.setOnClickListener()
+       //{
+       //    val intent = Intent(this, FlashScreen::class.java)
+       //    startActivity(intent)
+       //}
 
         //connect variables to actual panels (clean up naming convention here)
         panel01 = findViewById(R.id.panel01)

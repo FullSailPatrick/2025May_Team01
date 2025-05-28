@@ -1,4 +1,4 @@
-package com.example.flashtime
+package com.example.pnp2_newproject
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,10 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.pnp2_newproject.MainActivity
-import com.example.pnp2_newproject.R
 
-class MainActivity3 : AppCompatActivity()
+class CreateFlashCardsScreen : AppCompatActivity()
 {
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -24,13 +22,13 @@ class MainActivity3 : AppCompatActivity()
 
         buttonView.setOnClickListener()
         {
-            val intent: Intent = Intent(this, MainActivity::class.java)
+            val intent: Intent = Intent(this, HomeScreen::class.java)
             startActivity(intent)
         }
 
         imageButton.setOnClickListener()
         {
-            val intent: Intent = Intent(this, MainActivity2::class.java)
+            val intent: Intent = Intent(this, CreateScreen::class.java)
             startActivity(intent)
         }
 
