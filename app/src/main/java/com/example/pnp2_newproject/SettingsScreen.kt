@@ -14,7 +14,7 @@ class SettingsScreen : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.title = "Settings"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.arrow_back)
+
 
         if (savedInstanceState == null){
             supportFragmentManager.beginTransaction()

@@ -20,18 +20,16 @@
             android:exported="false" />
         <activity
             android:name=".CreateFlashCardsScreen"
-            android:exported="false"
-            android:parentActivityName=".CreateScreen"/>
+            android:exported="false" />
         <activity
             android:name=".QuestScreen"
             android:exported="false" />
         <activity
             android:name=".CreateScreen"
-            android:exported="true"
-            android:parentActivityName=".HomeScreen" />
+            android:exported="false" />
         <activity
             android:name=".PlayModesScreen"
-            android:exported="true"/>
+            android:exported="false"/>
         <activity
             android:name=".HomeScreen"
             android:exported="false" />

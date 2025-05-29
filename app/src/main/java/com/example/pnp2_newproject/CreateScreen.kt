@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 class CreateScreen : AppCompatActivity()
 {
     //variables for buttons
-    private lateinit var backToHomeButton: Button
+    private lateinit var backToHomeButton: ImageButton
     private lateinit var HoleInTheWallButton: Button
     private lateinit var HangmanButton: Button
     private lateinit var flashCardsButton: Button
@@ -24,7 +24,7 @@ class CreateScreen : AppCompatActivity()
         setContentView(R.layout.create_screen)
 
         //variables
-        backToHomeButton = findViewById<Button>(R.id.backToHome)
+        backToHomeButton = findViewById<ImageButton>(R.id.backToHome)
         HoleInTheWallButton = findViewById<Button>(R.id.HoleInTheWall)
         HangmanButton = findViewById<Button>(R.id.Hangman)
         flashCardsButton = findViewById<Button>(R.id.FlashCards)
@@ -45,11 +45,11 @@ class CreateScreen : AppCompatActivity()
         //    val intent: Intent = Intent(this, HangmanScreen::class.java)
         //    startActivity(intent)
         //}
-        //flashCardsButton.setOnClickListener()
-        //{
-        //    val intent: Intent = Intent(this, FlashCardsScreen::class.java)
-        //    startActivity(intent)
-        //}
+        flashCardsButton.setOnClickListener()
+        {
+            val intent: Intent = Intent(this, CreateFlashCardsScreen::class.java)
+           startActivity(intent)
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main))
         { v, insets ->
