@@ -7,61 +7,34 @@
     android:layout_height="match_parent"
     tools:context=".PlayModesScreen">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+
+    <Button
+        android:id="@+id/freePlayModeBtn"
+        android:layout_width="200dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="225dp"
+        android:text="Free Play"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <FrameLayout
-            android:id="@+id/panel00"
-            android:layout_width="match_parent"
-            android:layout_height="50dp">
-            <Button
-                android:id="@+id/backBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Back" />
-        </FrameLayout>
+    <Button
+        android:id="@+id/questModeBtn"
+        android:layout_width="200dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="225dp"
+        android:text="Quest"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <FrameLayout
-            android:id="@+id/panel01"
-            android:layout_width="match_parent"
-            android:layout_height="225dp"
-            android:background="@drawable/panel_pic2">
-            <Button
-                android:id="@+id/questModeBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Quest Mode" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/panel02"
-            android:layout_width="match_parent"
-            android:layout_height="235dp"
-            android:background="@drawable/panel_pic">
-            <Button
-                android:id="@+id/freePlayModeBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Free Play Mode" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/panel03"
-            android:layout_width="match_parent"
-            android:layout_height="225dp"
-            android:background="@drawable/bg_panel03">
-        <Button
-            android:id="@+id/flashModeBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Flash Mode"/>
-         </FrameLayout>
-
-</LinearLayout>
+    <Button
+        android:id="@+id/backBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

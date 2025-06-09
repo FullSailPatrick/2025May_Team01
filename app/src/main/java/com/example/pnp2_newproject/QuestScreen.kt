@@ -28,7 +28,7 @@ class QuestScreen : AppCompatActivity()
 
         //connect variables to actual buttons
         backButton = findViewById(R.id.backBtn)
-        nextButton = findViewById(R.id.nextBtn)
+        nextButton = findViewById<Button>(R.id.Boss2Btn)
 
         //set click listener
         backButton.setOnClickListener()
@@ -36,11 +36,10 @@ class QuestScreen : AppCompatActivity()
             val intent = Intent(this, PlayModesScreen::class.java)
             startActivity(intent)
         }
-       nextButton.setOnClickListener()
-       {
-           val intent = Intent(this, GamePlayScreen::class.java)
-           startActivity(intent)
-       }
-
+        nextButton.setOnClickListener()
+        {
+            val intent = Intent(this, CountDownScreen::class.java)
+            startActivity(intent)
+        }
     }
 }
