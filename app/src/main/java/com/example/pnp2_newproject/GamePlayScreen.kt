@@ -5,10 +5,12 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import kotlin.math.abs
 
 //include gesture detector
 class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener  {
@@ -64,11 +66,11 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener  {
 
     //override this method to recognize touch event
     override fun onTouchEvent(e: MotionEvent): Boolean {
-        return if (gestureDetector.onTouchEvent(event)) {
+        return if (gestureDetector.onTouchEvent(e)) {
             true
         }
         else {
-            super.onTouchEvent(event)
+            super.onTouchEvent(e)
         }
     }
 
@@ -103,7 +105,40 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener  {
         velocityX: Float,
         velocityY: Float
     ): Boolean {
-        TODO("Not yet implemented")
-    }
+        try {
+            val diffY = e2.y - e1!!.y
+            val diffX = e2.x - e1!!.x
 
-}
+            if (abs(diffX) > abs(diffY)) {
+
+                //horizontal swipe
+                if (abs(diffX) > swipeThreshold && abs(velocityX) > swipeVelocityThreshold) {
+                    if (diffX > 0) {
+                        showToast("swipe: L --> R")
+                    } else {
+                        showToast("swipe: R --> L")
+                    }
+                    return true
+                }
+            } else {
+                    //vertical swipe
+                    if (abs(diffY) > swipeThreshold && abs(velocityY) > swipeVelocityThreshold) {
+                        if (diffY > 0) {
+                            showToast("swipe: Top --> Bottom")
+                        } else {
+                            showToast("swipe: Bottom --> Top")
+                        }
+                        return true
+                    }
+                }
+
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+        }
+        return false
+    }
+    //define a method to show a toast
+        private fun showToast (message:String) {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+    }
