@@ -1,5 +1,6 @@
 package com.example.pnp2_newproject
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -17,17 +18,17 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener  {
 
     //variables
     private lateinit var THEFLASHCARD: androidx.cardview.widget.CardView
-    private lateinit var Question:TextView
+    private lateinit var FlashCardText:TextView
     private lateinit var gestureDetector: GestureDetector
     private val swipeThreshold = 100
     private val swipeVelocityThreshold = 100
 
     //declare functions to load a question / answer from QuestionAnswer Class (i.e. question replaces "question here" on FlashCard)
     fun LoadQuestion(){
-        Question.setText(QuestionAnswer.questions[2])
+        FlashCardText.setText(QuestionAnswer.questions[2])
     }
     fun LoadAnswer(){
-        Question.setText(QuestionAnswer.answers[2])
+        FlashCardText.setText(QuestionAnswer.answers[2])
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +47,7 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener  {
 
         //connect .xml id to new variables
         THEFLASHCARD = findViewById<androidx.cardview.widget.CardView>(R.id.FlashCard)
-        Question = findViewById<TextView>(R.id.flashCardQuestion)
+        FlashCardText = findViewById<TextView>(R.id.flashCardQuestion)
 
         //call function
         LoadQuestion()
@@ -59,7 +60,11 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener  {
                 .rotationYBy(360f)
                 .withEndAction {
                     //call load answer
-                    LoadAnswer()
+                        LoadAnswer()
+                    //if flashCardText is already an answer then load the question instead --> come back to (maybe)
+                    //if(FlashCardText == QuestionAnswer.answers) {
+                    //    LoadQuestion()
+                    //}
                 }
         }
     }
@@ -125,8 +130,47 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener  {
                     if (abs(diffY) > swipeThreshold && abs(velocityY) > swipeVelocityThreshold) {
                         if (diffY > 0) {
                             showToast("swipe: Top --> Bottom")
+                                THEFLASHCARD.animate()
+                                    .setDuration(1000)
+                                    .yBy(300f)
+                                    //resets the flash card
+                                    .withEndAction{
+                                        THEFLASHCARD.animate()
+                                            .alpha(1f)
+                                            .rotation(0f)
+                                            .rotationXBy(0f)
+                                            .rotationYBy(0f)
+                                            .scaleX(1f)
+                                            .scaleY(1f)
+                                            .translationX(0f)
+                                            .translationY(0f)
+                                            .setDuration(0)
+                                            .start()
+                                    }
+
                         } else {
                             showToast("swipe: Bottom --> Top")
+                            //change card background color to green --> come back to later (maybe)
+                            //THEFLASHCARD.setCardBackgroundColor(Color.GREEN)
+
+                            //make card slide up
+                            THEFLASHCARD.animate()
+                                .setDuration(1000)
+                                .yBy(-300f)
+                                //resets the flash card
+                                .withEndAction{
+                                    THEFLASHCARD.animate()
+                                        .alpha(1f)
+                                        .rotation(0f)
+                                        .rotationXBy(0f)
+                                        .rotationYBy(0f)
+                                        .scaleX(1f)
+                                        .scaleY(1f)
+                                        .translationX(0f)
+                                        .translationY(0f)
+                                        .setDuration(0)
+                                        .start()
+                                    }
                         }
                         return true
                     }
