@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
@@ -62,6 +63,11 @@ class HomeScreen : AppCompatActivity()
         {
             val intent: Intent = (Intent(this, PlayModesScreen::class.java))
             startActivity(intent)
+        }
+        TimerManager.timerFinished.observe(this) {finished ->
+            if(finished) {
+                Toast.makeText(this,"Time For A Break", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

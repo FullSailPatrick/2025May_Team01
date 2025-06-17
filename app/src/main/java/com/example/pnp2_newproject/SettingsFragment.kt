@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import java.util.Timer
 
 class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -21,6 +22,27 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
+
+        val timerPref = findPreference<ListPreference>("break_timer")
+        timerPref?.setOnPreferenceChangeListener{_,timerVal ->
+            val selectedValue = timerVal as String
+            val durationInMinutes = when (selectedValue) {
+                "0" -> 0
+                "1" -> 15
+                "2" -> 30
+                "3" -> 45
+                "4" -> 60
+                "5" -> 1
+                else -> 0
+            }
+            if(durationInMinutes > 0) {
+                TimerManager.startTimer(durationInMinutes * 60)
+            }
+            else{
+                TimerManager.cancelTimer()
+            }
+            true
+        }
     }
 
 }
