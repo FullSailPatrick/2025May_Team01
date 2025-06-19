@@ -1,5 +1,6 @@
 package com.example.pnp2_newproject
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.GestureDetector
@@ -14,22 +15,40 @@ import androidx.core.view.WindowInsetsCompat
 import kotlin.math.abs
 
 //include gesture detector
-class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener  {
+class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
 
     //variables
     private lateinit var THEFLASHCARD: androidx.cardview.widget.CardView
-    private lateinit var FlashCardText:TextView
+    private lateinit var FlashCardText: TextView
     private lateinit var gestureDetector: GestureDetector
     private val swipeThreshold = 100
     private val swipeVelocityThreshold = 100
 
+    var index = 0
+    var showingQuestion = true
+    //keeps track of what index you're on --> I NEED TO FIGURE THIS PART OUT!!!!
+    fun goToNextFlashCard() {
+
+        var FlashCardHolder = FlashCardQuestionsAnswers[index]
+        index += 1
+
+        if(index == FlashCardQuestionsAnswers.size)
+        {
+            val intent = Intent(this, PlayerResultsScreen::class.java)
+            startActivity(intent)
+        }
+
+    }
+
     //declare functions to load a question / answer from QuestionAnswer Class (i.e. question replaces "question here" on FlashCard)
-    fun LoadQuestion(){
-        FlashCardText.setText(QuestionAnswer.questions[2])
-    }
-    fun LoadAnswer(){
-        FlashCardText.setText(QuestionAnswer.answers[2])
-    }
+        fun LoadQuestion() {
+            FlashCardText.setText(FlashCardQuestionsAnswers[index].questions)
+        }
+
+        fun LoadAnswer() {
+            FlashCardText.setText(FlashCardQuestionsAnswers[index].answers)
+        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +68,8 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener  {
         THEFLASHCARD = findViewById<androidx.cardview.widget.CardView>(R.id.FlashCard)
         FlashCardText = findViewById<TextView>(R.id.flashCardQuestion)
 
+        val textString = FlashCardText.text.toString()
+        //var showingQuestion = true
         //call function
         LoadQuestion()
 
@@ -60,11 +81,13 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener  {
                 .rotationYBy(360f)
                 .withEndAction {
                     //call load answer
+                    if(showingQuestion) {
                         LoadAnswer()
-                    //if flashCardText is already an answer then load the question instead --> come back to (maybe)
-                    //if(FlashCardText == QuestionAnswer.answers) {
-                    //    LoadQuestion()
-                    //}
+                    }
+                    else{
+                        LoadQuestion()
+                    }
+                    showingQuestion = !showingQuestion
                 }
         }
     }
@@ -129,7 +152,6 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener  {
                     //vertical swipe
                     if (abs(diffY) > swipeThreshold && abs(velocityY) > swipeVelocityThreshold) {
                         if (diffY > 0) {
-                            showToast("swipe: Top --> Bottom")
                                 THEFLASHCARD.animate()
                                     .setDuration(1000)
                                     .yBy(300f)
@@ -149,10 +171,8 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener  {
                                     }
 
                         } else {
-                            showToast("swipe: Bottom --> Top")
-                            //change card background color to green --> come back to later (maybe)
-                            //THEFLASHCARD.setCardBackgroundColor(Color.GREEN)
-
+                            LoadQuestion()
+                            LoadAnswer()
                             //make card slide up
                             THEFLASHCARD.animate()
                                 .setDuration(1000)
@@ -171,6 +191,10 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener  {
                                         .setDuration(0)
                                         .start()
                                     }
+                            goToNextFlashCard()
+                            showingQuestion = true
+                            //LoadQuestion()
+
                         }
                         return true
                     }

@@ -38,11 +38,11 @@ class PlayerResultsScreen : AppCompatActivity()
             val intent = Intent(this, PlayModesScreen::class.java)
             startActivity(intent)
         }
-       //homeButton.setOnClickListener()
-       //{
-       //    val intent = Intent(this, //Cant access homeScreen branch from this branch; Add here after everything is merged)
-       //    startActivity(intent)
-       //}
+       homeButton.setOnClickListener()
+       {
+           val intent = Intent(this, HomeScreen::class.java)
+           startActivity(intent)
+       }
         playAgainButton.setOnClickListener()
         {
             val intent = Intent(this, QuestScreen::class.java)
