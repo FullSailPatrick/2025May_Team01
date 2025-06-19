@@ -3,6 +3,7 @@ package com.example.pnp2_newproject
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -26,6 +27,13 @@ class PlayerResultsScreen : AppCompatActivity()
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        //display score
+        val correct = intent.getIntExtra("correctAnswers", 0)
+        val total = intent.getIntExtra("totalAnswers", 0)
+
+        val scoreTextView = findViewById<TextView>(R.id.scoreTextView)
+        scoreTextView.text = "$correct out of $total"
 
         //connect variables to actual buttons
         backButton = findViewById(R.id.backBtn)

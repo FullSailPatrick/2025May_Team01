@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import kotlin.math.abs
+import android.os.CountDownTimer
 
 //include gesture detector
 class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
@@ -23,6 +24,8 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
     private lateinit var gestureDetector: GestureDetector
     private val swipeThreshold = 100
     private val swipeVelocityThreshold = 100
+    var correctAnswers = 0
+    var TotalAnswers = 0
 
     var index = 0
     var showingQuestion = true
@@ -35,9 +38,13 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
         if(index == FlashCardQuestionsAnswers.size)
         {
             val intent = Intent(this, PlayerResultsScreen::class.java)
+            intent.putExtra("correctAnswers", correctAnswers)
+            intent.putExtra("totalAnswers", TotalAnswers)
             startActivity(intent)
         }
-
+        else{
+            LoadQuestion()
+        }
     }
 
     //declare functions to load a question / answer from QuestionAnswer Class (i.e. question replaces "question here" on FlashCard)
@@ -60,6 +67,24 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        //timer code here
+        val timerTextView = findViewById<TextView>(R.id.timerTextView)
+
+        val timer = object: CountDownTimer(20000, 1000) {
+            override fun onTick(millisUnitlFinished: Long) {
+                val secondsLeft = millisUnitlFinished / 1000
+                timerTextView.text = "Time Remaining: $secondsLeft"
+
+            }
+            override fun onFinish() {
+                val intent = Intent(this@GamePlayScreen, PlayerResultsScreen::class.java)
+                intent.putExtra("correctAnswers", correctAnswers)
+                intent.putExtra("totalAnswers", TotalAnswers)
+                startActivity(intent)
+            }
+        }
+        timer.start()
 
         // initialize the gesture detector variable
         gestureDetector = GestureDetector(this, this)
@@ -152,7 +177,8 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
                     //vertical swipe
                     if (abs(diffY) > swipeThreshold && abs(velocityY) > swipeVelocityThreshold) {
                         if (diffY > 0) {
-                                THEFLASHCARD.animate()
+                            //make card slide down
+                            THEFLASHCARD.animate()
                                     .setDuration(1000)
                                     .yBy(300f)
                                     //resets the flash card
@@ -169,8 +195,11 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
                                             .setDuration(0)
                                             .start()
                                     }
-
-                        } else {
+                            TotalAnswers++
+                            goToNextFlashCard()
+                            showingQuestion = true
+                        }
+                        else {
                             LoadQuestion()
                             LoadAnswer()
                             //make card slide up
@@ -191,10 +220,10 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
                                         .setDuration(0)
                                         .start()
                                     }
+                            correctAnswers++
+                            TotalAnswers++
                             goToNextFlashCard()
                             showingQuestion = true
-                            //LoadQuestion()
-
                         }
                         return true
                     }
