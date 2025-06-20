@@ -7,12 +7,11 @@
     <PreferenceCategory app:title=" ">
 
         <ListPreference
-            android:defaultValue="3"
+            android:defaultValue="0"
             android:dialogTitle="@string/remind_to_take_a_break"
             android:entries="@array/pref_remind_me_to_take_a_break"
             android:entryValues="@array/pref_duration"
-            android:key="@string/key_upload_quality"
-            android:summary="@string/remind_me"
+            android:key="@string/break_timer"
             android:title="@string/remind_me" />
 
         <ListPreference

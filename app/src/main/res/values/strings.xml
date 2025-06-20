@@ -2,7 +2,7 @@
     <string name="app_name">PnP2_NewProject</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="remind_to_take_a_break">Remind me to take a break</string>
-    <string name="key_upload_quality">key_upload_quality</string>
+    <string name="break_timer">break_timer</string>
     <string name="remind_me">Remind me to take a break</string>
     <string name="day_night">day_night</string>
     <string name="theme_changer">Change Theme</string>
@@ -12,11 +12,12 @@
 
 
     <string-array name="pref_remind_me_to_take_a_break">
-        <item>1 hours</item>
-        <item>2 hours</item>
-        <item>3 hours</item>
-        <item>5 hours</item>
-        <item>10 hours</item>
+        <item>0/Cancel</item>
+        <item>15 Minutes</item>
+        <item>30 Minutes</item>
+        <item>45 Minutes</item>
+        <item>1 Hours</item>
+        <item>1 Minute/Test</item>
     </string-array>
 
     <string-array name="pref_duration">
@@ -25,6 +26,7 @@
         <item>2</item>
         <item>3</item>
         <item>4</item>
+        <item>5</item>
     </string-array>
 
     <string-array name="pref_theme_choices">

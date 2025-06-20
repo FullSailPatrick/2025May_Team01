@@ -2,6 +2,7 @@ package com.example.pnp2_newproject
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 
@@ -22,6 +23,12 @@ class SettingsScreen : AppCompatActivity() {
                 .commit()
         }
 
+
+        TimerManager.timerFinished.observe(this) {finished ->
+            if(finished) {
+                Toast.makeText(this,"Time For A Break", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
