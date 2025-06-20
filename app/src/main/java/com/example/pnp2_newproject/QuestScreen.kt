@@ -12,7 +12,9 @@ class QuestScreen : AppCompatActivity()
 {
     //variables for buttons
     private lateinit var backButton: Button
-    private lateinit var nextButton: Button
+    private lateinit var lvl01Button: Button
+    private lateinit var lvl02Button: Button
+    private lateinit var bossButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -28,7 +30,9 @@ class QuestScreen : AppCompatActivity()
 
         //connect variables to actual buttons
         backButton = findViewById(R.id.backBtn)
-        nextButton = findViewById<Button>(R.id.Boss2Btn)
+        lvl01Button = findViewById<Button>(R.id.lvl01Btn)
+        lvl02Button = findViewById<Button>(R.id.lvl02Btn)
+        bossButton = findViewById<Button>(R.id.BossBtn)
 
         //set click listener
         backButton.setOnClickListener()
@@ -36,7 +40,15 @@ class QuestScreen : AppCompatActivity()
             val intent = Intent(this, PlayModesScreen::class.java)
             startActivity(intent)
         }
-        nextButton.setOnClickListener()
+        //lvl01Button.setOnClickListener()
+        //{
+        //
+        //}
+        //lvl02Button.setOnClickListener()
+        //{
+        //
+        //}
+        bossButton.setOnClickListener()
         {
             val intent = Intent(this, CountDownScreen::class.java)
             startActivity(intent)
