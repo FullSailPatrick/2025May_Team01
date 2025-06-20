@@ -9,4 +9,5 @@
     <color name="darker_night">#05161F</color>
     <color name="day_green">#EFFFE4</color>
     <color name="logo_green">#1DC082</color>
+    <color name="trash_red">#FF0000</color>
 </resources>
