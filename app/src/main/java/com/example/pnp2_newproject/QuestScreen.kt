@@ -41,17 +41,22 @@ class QuestScreen : AppCompatActivity()
             val intent = Intent(this, PlayModesScreen::class.java)
             startActivity(intent)
         }
-        //lvl01Button.setOnClickListener()
-        //{
-        //
-        //}
-        //lvl02Button.setOnClickListener()
-        //{
-        //
-        //}
+        lvl01Button.setOnClickListener()
+        {
+            val intent = Intent(this, CountDownScreen::class.java)
+            intent.putExtra("LEVEL_SELECTED", "level 01")
+            startActivity(intent)
+        }
+        lvl02Button.setOnClickListener()
+        {
+            val intent = Intent(this, CountDownScreen::class.java)
+            intent.putExtra("LEVEL_SELECTED", "level 02")
+            startActivity(intent)
+        }
         bossButton.setOnClickListener()
         {
             val intent = Intent(this, CountDownScreen::class.java)
+            intent.putExtra("LEVEL_SELECTED", "Boss level")
             startActivity(intent)
         }
 
