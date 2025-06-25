@@ -14,6 +14,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import kotlin.math.abs
 import android.os.CountDownTimer
+import androidx.core.view.isVisible
+import kotlinx.coroutines.delay
 
 //include gesture detector
 class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
@@ -22,6 +24,7 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
     private lateinit var THEFLASHCARD: androidx.cardview.widget.CardView
     private lateinit var FlashCardText: TextView
     private lateinit var gestureDetector: GestureDetector
+    private lateinit var timer: CountDownTimer
     private val swipeThreshold = 100
     private val swipeVelocityThreshold = 100
     var correctAnswers = 0
@@ -41,6 +44,7 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
             intent.putExtra("correctAnswers", correctAnswers)
             intent.putExtra("totalAnswers", TotalAnswers)
             startActivity(intent)
+            finish()
         }
         else{
             LoadQuestion()
@@ -71,10 +75,10 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
         //timer code here
         val timerTextView = findViewById<TextView>(R.id.timerTextView)
 
-        val timer = object: CountDownTimer(20000, 1000) {
+        timer = object: CountDownTimer(20000, 1000) {
             override fun onTick(millisUnitlFinished: Long) {
                 val secondsLeft = millisUnitlFinished / 1000
-                timerTextView.text = "Time Remaining: $secondsLeft"
+                timerTextView.text = "$secondsLeft"
 
             }
             override fun onFinish() {
@@ -82,9 +86,13 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
                 intent.putExtra("correctAnswers", correctAnswers)
                 intent.putExtra("totalAnswers", TotalAnswers)
                 startActivity(intent)
+                finish()
+
             }
-        }
-        timer.start()
+
+        }.start()
+
+
 
         // initialize the gesture detector variable
         gestureDetector = GestureDetector(this, this)
@@ -97,7 +105,6 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
         //var showingQuestion = true
         //call function
         LoadQuestion()
-
         //flip flash card
         THEFLASHCARD.setOnClickListener()
         {
@@ -120,6 +127,11 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
                 Toast.makeText(this,"Time For A Break", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        timer.cancel()
     }
 
     //override this method to recognize touch event
@@ -183,6 +195,7 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
                     if (abs(diffY) > swipeThreshold && abs(velocityY) > swipeVelocityThreshold) {
                         if (diffY > 0) {
                             //make card slide down
+                            FlashCardText.isVisible = false
                             THEFLASHCARD.animate()
                                     .setDuration(1000)
                                     .yBy(300f)
@@ -199,14 +212,18 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
                                             .translationY(0f)
                                             .setDuration(0)
                                             .start()
+                                        FlashCardText.isVisible = true
                                     }
                             TotalAnswers++
                             goToNextFlashCard()
                             showingQuestion = true
+
+
                         }
                         else {
                             LoadQuestion()
                             LoadAnswer()
+                            FlashCardText.isVisible = false
                             //make card slide up
                             THEFLASHCARD.animate()
                                 .setDuration(1000)
@@ -224,11 +241,13 @@ class GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
                                         .translationY(0f)
                                         .setDuration(0)
                                         .start()
+                                    FlashCardText.isVisible = true
                                     }
                             correctAnswers++
                             TotalAnswers++
-                            goToNextFlashCard()
                             showingQuestion = true
+                            goToNextFlashCard()
+
                         }
                         return true
                     }

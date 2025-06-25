@@ -46,23 +46,22 @@ class PlayerResultsScreen : AppCompatActivity()
         {
             val intent = Intent(this, PlayModesScreen::class.java)
             startActivity(intent)
+            finish()
         }
        homeButton.setOnClickListener()
        {
            val intent = Intent(this, HomeScreen::class.java)
            startActivity(intent)
+           finish()
        }
         playAgainButton.setOnClickListener()
         {
             val intent = Intent(this, QuestScreen::class.java)
             startActivity(intent)
+            finish()
         }
 
 
-        TimerManager.timerFinished.observe(this) {finished ->
-            if(finished) {
-                Toast.makeText(this,"Time For A Break", Toast.LENGTH_SHORT).show()
-            }
-        }
+
     }
 }

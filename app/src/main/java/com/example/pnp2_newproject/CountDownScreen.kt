@@ -43,6 +43,7 @@ class CountDownScreen : AppCompatActivity()
 
                 val intent = Intent(this@CountDownScreen, GamePlayScreen::class.java)
                 startActivity(intent)
+                finish()
             }
         }
         countDownTimer.start()

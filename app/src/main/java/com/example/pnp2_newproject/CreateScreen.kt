@@ -47,6 +47,7 @@ class CreateScreen : AppCompatActivity()
         {
             val intent = Intent(this, CreateFlashCardsScreen::class.java)
            startActivity(intent)
+            finish()
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main))
@@ -56,11 +57,7 @@ class CreateScreen : AppCompatActivity()
             insets
         }
 
-        TimerManager.timerFinished.observe(this) {finished ->
-            if(finished) {
-                Toast.makeText(this,"Time For A Break", Toast.LENGTH_SHORT).show()
-            }
-        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
