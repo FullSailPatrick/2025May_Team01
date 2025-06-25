@@ -53,6 +53,7 @@ class HomeScreen : AppCompatActivity()
         {
             val intent: Intent = (Intent(this, SettingsScreen::class.java))
             startActivity(intent)
+
         }
        //favoritesBtn.setOnClickListener()
        //{

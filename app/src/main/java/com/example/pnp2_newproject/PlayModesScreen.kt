@@ -40,6 +40,7 @@ class PlayModesScreen : AppCompatActivity()
         {
             val intent = Intent(this, HomeScreen::class.java)
             startActivity(intent)
+            finish()
         }
 
        questButton.setOnClickListener()
@@ -50,6 +51,7 @@ class PlayModesScreen : AppCompatActivity()
                .withEndAction {
                    val intent = Intent(this, QuestScreen::class.java)
                    startActivity(intent)
+                   finish()
                }
        }
 
@@ -63,10 +65,6 @@ class PlayModesScreen : AppCompatActivity()
                    //startActivity(intent)
                }
        }
-        TimerManager.timerFinished.observe(this) {finished ->
-            if(finished) {
-                Toast.makeText(this,"Time For A Break", Toast.LENGTH_SHORT).show()
-            }
-        }
+
     }
 }
