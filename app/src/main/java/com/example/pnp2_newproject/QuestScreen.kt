@@ -40,6 +40,7 @@ class QuestScreen : AppCompatActivity()
         {
             val intent = Intent(this, PlayModesScreen::class.java)
             startActivity(intent)
+            finish()
         }
         lvl01Button.setOnClickListener()
         {
@@ -58,12 +59,9 @@ class QuestScreen : AppCompatActivity()
             val intent = Intent(this, CountDownScreen::class.java)
             intent.putExtra("LEVEL_SELECTED", "Boss level")
             startActivity(intent)
+            finish()
         }
 
-        TimerManager.timerFinished.observe(this) {finished ->
-            if(finished) {
-                Toast.makeText(this,"Time For A Break", Toast.LENGTH_SHORT).show()
-            }
-        }
+
     }
 }

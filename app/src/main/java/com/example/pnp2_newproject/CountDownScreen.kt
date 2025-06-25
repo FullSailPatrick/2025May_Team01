@@ -40,9 +40,9 @@ class CountDownScreen : AppCompatActivity()
             override fun onFinish()
             {
                 countdownTextView.text = "GO!"
-                
+
                 val levelSelected = intent.getStringExtra("LEVEL_SELECTED")
-                
+
                 val intent = when (levelSelected) {
                     "level 01" -> Intent(this@CountDownScreen, Level01GamePlayScreen::class.java)
                     "level 02" -> Intent(this@CountDownScreen, Level02GamePlayScreen::class.java)
@@ -50,12 +50,14 @@ class CountDownScreen : AppCompatActivity()
                     else -> null
                 }
 
+                //val intent = Intent(this@CountDownScreen, GamePlayScreen::class.java)
+                //startActivity(intent)
+                //finish()
                 intent?.let{
                     startActivity(it)
                     finish()
                 }
             }
-
         }
         countDownTimer.start()
     }

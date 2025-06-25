@@ -1,10 +1,12 @@
 package com.example.pnp2_newproject
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +14,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import kotlin.math.abs
 import android.os.CountDownTimer
-import android.widget.Button
+import androidx.core.view.isVisible
+import kotlinx.coroutines.delay
 
 //include gesture detector
 class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
@@ -21,6 +24,7 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
     private lateinit var THEFLASHCARD: androidx.cardview.widget.CardView
     private lateinit var FlashCardText: TextView
     private lateinit var gestureDetector: GestureDetector
+    private lateinit var timer: CountDownTimer
     private val swipeThreshold = 100
     private val swipeVelocityThreshold = 100
     var correctAnswers = 0
@@ -93,7 +97,7 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
         val timer = object: CountDownTimer(60000, 1000) {
             override fun onTick(millisUnitlFinished: Long) {
                 val secondsLeft = millisUnitlFinished / 1000
-                timerTextView.text = "Time Remaining: $secondsLeft"
+                timerTextView.text = "$secondsLeft"
 
             }
             override fun onFinish() {
@@ -140,6 +144,11 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                 Toast.makeText(this,"Time For A Break", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        timer.cancel()
     }
 
     //override this method to recognize touch event
@@ -203,6 +212,7 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                     if (abs(diffY) > swipeThreshold && abs(velocityY) > swipeVelocityThreshold) {
                         if (diffY > 0) {
                             //make card slide down
+                            FlashCardText.isVisible = false
                             THEFLASHCARD.animate()
                                     .setDuration(1000)
                                     .yBy(300f)
@@ -219,6 +229,7 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                                             .translationY(0f)
                                             .setDuration(0)
                                             .start()
+                                        FlashCardText.isVisible = true
                                     }
                             TotalAnswers++
                             goToNextFlashCard()
@@ -227,6 +238,7 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                         else {
                             LoadQuestion()
                             LoadAnswer()
+                            FlashCardText.isVisible = false
                             //make card slide up
                             THEFLASHCARD.animate()
                                 .setDuration(1000)
@@ -244,11 +256,13 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                                         .translationY(0f)
                                         .setDuration(0)
                                         .start()
+                                    FlashCardText.isVisible = true
                                     }
                             correctAnswers++
                             TotalAnswers++
-                            goToNextFlashCard()
                             showingQuestion = true
+                            goToNextFlashCard()
+
                         }
                         return true
                     }
