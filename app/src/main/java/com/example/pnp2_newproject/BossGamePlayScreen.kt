@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import kotlin.math.abs
 import android.os.CountDownTimer
 import android.widget.Button
+import androidx.core.view.isVisible
 
 //include gesture detector
 class BossGamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
@@ -21,6 +22,7 @@ class BossGamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListene
     private lateinit var THEFLASHCARD: androidx.cardview.widget.CardView
     private lateinit var FlashCardText: TextView
     private lateinit var gestureDetector: GestureDetector
+    private lateinit var timer: CountDownTimer
     private val swipeThreshold = 100
     private val swipeVelocityThreshold = 100
     var correctAnswers = 0
@@ -44,10 +46,10 @@ class BossGamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListene
     //keeps track of what index you're on --> I NEED TO FIGURE THIS PART OUT!!!!
     fun goToNextFlashCard() {
 
-        var FlashCardHolder = com.example.pnp2_newproject.FlashCardQuestionsAnswers3[index]
+        var FlashCardHolder = FlashCardQuestionsAnswers3[index]
         index += 1
 
-        if(index == com.example.pnp2_newproject.FlashCardQuestionsAnswers3.size)
+        if(index == FlashCardQuestionsAnswers3.size)
         {
             val intent = Intent(this, PlayerResultsScreen::class.java)
             intent.putExtra("correctAnswers", correctAnswers)
@@ -62,11 +64,11 @@ class BossGamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListene
 
     //declare functions to load a question / answer from QuestionAnswer Class (i.e. question replaces "question here" on FlashCard)
     fun LoadQuestion() {
-        FlashCardText.setText(com.example.pnp2_newproject.FlashCardQuestionsAnswers3[index].questions)
+        FlashCardText.setText(FlashCardQuestionsAnswers3[index].questions)
     }
 
     fun LoadAnswer() {
-        FlashCardText.setText(com.example.pnp2_newproject.FlashCardQuestionsAnswers3[index].answers)
+        FlashCardText.setText(FlashCardQuestionsAnswers3[index].answers)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,10 +92,10 @@ class BossGamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListene
         //timer code here
         val timerTextView = findViewById<TextView>(R.id.timerTextView)
 
-        val timer = object: CountDownTimer(60000, 1000) {
+        timer = object: CountDownTimer(60000, 1000) {
             override fun onTick(millisUnitlFinished: Long) {
                 val secondsLeft = millisUnitlFinished / 1000
-                timerTextView.text = "Time Remaining: $secondsLeft"
+                timerTextView.text = "$secondsLeft"
 
             }
             override fun onFinish() {
@@ -103,8 +105,8 @@ class BossGamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListene
                 startActivity(intent)
                 finish()
             }
-        }
-        timer.start()
+        }.start()
+
 
         // initialize the gesture detector variable
         gestureDetector = GestureDetector(this, this)
@@ -135,11 +137,12 @@ class BossGamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListene
                     showingQuestion = !showingQuestion
                 }
         }
-        TimerManager.timerFinished.observe(this) {finished ->
-            if(finished) {
-                Toast.makeText(this,"Time For A Break", Toast.LENGTH_SHORT).show()
-            }
-        }
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        timer.cancel()
     }
 
     //override this method to recognize touch event
@@ -203,6 +206,7 @@ class BossGamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListene
                 if (abs(diffY) > swipeThreshold && abs(velocityY) > swipeVelocityThreshold) {
                     if (diffY > 0) {
                         //make card slide down
+                        FlashCardText.isVisible = false
                         THEFLASHCARD.animate()
                             .setDuration(1000)
                             .yBy(300f)
@@ -219,6 +223,7 @@ class BossGamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListene
                                     .translationY(0f)
                                     .setDuration(0)
                                     .start()
+                                FlashCardText.isVisible = true
                             }
                         TotalAnswers++
                         goToNextFlashCard()
@@ -228,6 +233,7 @@ class BossGamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListene
                         LoadQuestion()
                         LoadAnswer()
                         //make card slide up
+                        FlashCardText.isVisible = false
                         THEFLASHCARD.animate()
                             .setDuration(1000)
                             .yBy(-300f)
@@ -244,6 +250,7 @@ class BossGamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListene
                                     .translationY(0f)
                                     .setDuration(0)
                                     .start()
+                                FlashCardText.isVisible = true
                             }
                         correctAnswers++
                         TotalAnswers++

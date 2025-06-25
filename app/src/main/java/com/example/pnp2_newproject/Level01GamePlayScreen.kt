@@ -94,7 +94,7 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
         //timer code here
         val timerTextView = findViewById<TextView>(R.id.timerTextView)
 
-        val timer = object: CountDownTimer(60000, 1000) {
+        timer = object: CountDownTimer(60000, 1000) {
             override fun onTick(millisUnitlFinished: Long) {
                 val secondsLeft = millisUnitlFinished / 1000
                 timerTextView.text = "$secondsLeft"
@@ -107,8 +107,7 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                 startActivity(intent)
                 finish()
             }
-        }
-        timer.start()
+        }.start()
 
         // initialize the gesture detector variable
         gestureDetector = GestureDetector(this, this)

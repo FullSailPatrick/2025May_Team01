@@ -50,22 +50,24 @@
         android:id="@+id/quitBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/logo_green"
         android:text="Quit"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
-        android:layout_width="443dp"
+        android:layout_width="415dp"
         android:layout_height="162dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/FlashCard"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/flashCardQuestion"
@@ -73,7 +75,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="question here"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textSize="20sp" />
         </androidx.cardview.widget.CardView>
     </FrameLayout>
 
@@ -83,6 +86,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="176dp"
         android:text="timer here "
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
