@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="395dp"
+    android:layout_height="200dp"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp"
@@ -10,40 +10,62 @@
     android:clickable="true">
 
     <!-- To display item question -->
+
+    <!-- To display item answer -->
+
+
+
     <TextView
         android:id="@+id/txtItemQuestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:text="Question:"
         android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:maxWidth="375dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- To display item answer -->
 
     <TextView
         android:id="@+id/txtItemAnswer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
         android:text="Answer:"
         android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:maxWidth="375dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/ibEdits"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="76dp"
+        android:backgroundTint="@android:color/transparent"
+        android:contentDescription="Edit"
+        android:src="@drawable/add"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/trash_red" />
 
     <ImageButton
         android:id="@+id/ibDelete"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="24dp"
         android:backgroundTint="@android:color/transparent"
         android:contentDescription="Delete"
         android:src="@drawable/ic_action_delete"

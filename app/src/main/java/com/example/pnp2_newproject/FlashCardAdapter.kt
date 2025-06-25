@@ -22,6 +22,9 @@ class FlashCardAdapter(var list: List<FlashCardItems>, private var viewModel: Fl
         holder.ibDelete.setOnClickListener {
             viewModel.delete(currentItem)
         }
+        holder.ibEdits.setOnClickListener {
+            viewModel.insert(currentItem)
+        }
 
         // Show question and answer only for the last item OR on click
 //        if (position == list.size - 1) {
@@ -45,5 +48,6 @@ class FlashCardAdapter(var list: List<FlashCardItems>, private var viewModel: Fl
         val txtItemQuestion: TextView = itemView.findViewById(R.id.txtItemQuestion)
         val txtItemAnswer: TextView = itemView.findViewById(R.id.txtItemAnswer)
         val ibDelete: ImageButton = itemView.findViewById(R.id.ibDelete)
+        val ibEdits: ImageButton = itemView.findViewById(R.id.ibEdits)
     }
 }
