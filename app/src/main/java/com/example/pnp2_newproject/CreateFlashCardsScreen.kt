@@ -59,7 +59,8 @@ class CreateFlashCardsScreen : AppCompatActivity()
         {
             flashcardAdapter.list = it
             flashcardAdapter.notifyItemInserted(flashcardAdapter.list.size)
-            flashcardAdapter.notifyDataSetChanged()
+            flashcardAdapter.notifyItemRemoved(flashcardAdapter.list.size)
+            flashcardAdapter.notifyItemChanged(flashcardAdapter.list.size)
 
             // on ClickListener on button to open dialog box
             btnAdd.setOnClickListener()
