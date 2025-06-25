@@ -94,7 +94,7 @@ class Level02GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
         val timer = object: CountDownTimer(60000, 1000) {
             override fun onTick(millisUnitlFinished: Long) {
                 val secondsLeft = millisUnitlFinished / 1000
-                timerTextView.text = "Time Remaining: $secondsLeft"
+                timerTextView.text = "$secondsLeft"
 
             }
             override fun onFinish() {
@@ -115,7 +115,6 @@ class Level02GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
         FlashCardText = findViewById<TextView>(R.id.flashCardQuestion)
 
         val textString = FlashCardText.text.toString()
-        //var showingQuestion = true
         //call function
         LoadQuestion()
 

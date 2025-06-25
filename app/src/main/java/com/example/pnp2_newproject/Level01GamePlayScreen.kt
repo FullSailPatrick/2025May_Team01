@@ -45,7 +45,7 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
         FlashCard("On Feb 12, 1809 Abraham Lincoln was born. How old was his mother?",  "25 years old")
     )
 
-    //keeps track of what index you're on --> I NEED TO FIGURE THIS PART OUT!!!!
+    //keeps track of what index you're on
     fun goToNextFlashCard() {
 
         var FlashCardHolder = FlashCardQuestionsAnswers[index]
@@ -94,7 +94,7 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
         //timer code here
         val timerTextView = findViewById<TextView>(R.id.timerTextView)
 
-        val timer = object: CountDownTimer(60000, 1000) {
+        timer = object: CountDownTimer(60000, 1000) {
             override fun onTick(millisUnitlFinished: Long) {
                 val secondsLeft = millisUnitlFinished / 1000
                 timerTextView.text = "$secondsLeft"
@@ -118,7 +118,6 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
         FlashCardText = findViewById<TextView>(R.id.flashCardQuestion)
 
         val textString = FlashCardText.text.toString()
-        //var showingQuestion = true
         //call function
         LoadQuestion()
 
@@ -260,9 +259,8 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                                     }
                             correctAnswers++
                             TotalAnswers++
-                            showingQuestion = true
                             goToNextFlashCard()
-
+                            showingQuestion = true
                         }
                         return true
                     }

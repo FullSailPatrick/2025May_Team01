@@ -44,10 +44,10 @@ class BossGamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListene
     //keeps track of what index you're on --> I NEED TO FIGURE THIS PART OUT!!!!
     fun goToNextFlashCard() {
 
-        var FlashCardHolder = com.example.pnp2_newproject.FlashCardQuestionsAnswers3[index]
+        var FlashCardHolder = FlashCardQuestionsAnswers3[index]
         index += 1
 
-        if(index == com.example.pnp2_newproject.FlashCardQuestionsAnswers3.size)
+        if(index == FlashCardQuestionsAnswers3.size)
         {
             val intent = Intent(this, PlayerResultsScreen::class.java)
             intent.putExtra("correctAnswers", correctAnswers)
@@ -62,11 +62,11 @@ class BossGamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListene
 
     //declare functions to load a question / answer from QuestionAnswer Class (i.e. question replaces "question here" on FlashCard)
     fun LoadQuestion() {
-        FlashCardText.setText(com.example.pnp2_newproject.FlashCardQuestionsAnswers3[index].questions)
+        FlashCardText.setText(FlashCardQuestionsAnswers3[index].questions)
     }
 
     fun LoadAnswer() {
-        FlashCardText.setText(com.example.pnp2_newproject.FlashCardQuestionsAnswers3[index].answers)
+        FlashCardText.setText(FlashCardQuestionsAnswers3[index].answers)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
