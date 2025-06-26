@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -50,17 +49,20 @@ class CreateFlashCardsScreen : AppCompatActivity()
 
         // Initialised View Model
         viewModel = ViewModelProvider(this, factory)[FlashCardViewModel::class.java]
-        val flashcardAdapter = FlashCardAdapter(listOf(), viewModel)
+        val flashcardAdapter = FlashCardAdapter(viewModel)
         rvList.layoutManager = LinearLayoutManager(this)
         rvList.adapter = flashcardAdapter
 
         // To display all items in recycler view
         viewModel.allFlashCardItems().observe(this)
         {
-            flashcardAdapter.list = it
-            flashcardAdapter.notifyItemInserted(flashcardAdapter.list.size)
-            flashcardAdapter.notifyItemRemoved(flashcardAdapter.list.size)
-            flashcardAdapter.notifyItemChanged(flashcardAdapter.list.size)
+            val flashcardAdapter = FlashCardAdapter(viewModel)
+            rvList.layoutManager = LinearLayoutManager(this)
+            rvList.adapter = flashcardAdapter
+
+            viewModel.allFlashCardItems().observe(this) {
+                flashcardAdapter.submitList(it)
+            }
 
             // on ClickListener on button to open dialog box
             btnAdd.setOnClickListener()
@@ -125,6 +127,9 @@ interface FlashCardDao {
     @Delete
     suspend fun delete(item: FlashCardItems)
 
+    @Update
+    suspend fun update(item: FlashCardItems)
+
     // getAllFlashCardItems function is used to get all the data of database.
     @Query("SELECT * FROM flashcard_items")
     fun getAllFlashCardItems(): LiveData<List<FlashCardItems>>
@@ -157,6 +162,7 @@ class FlashCardRepository(private var db: FlashCardDatabase) {
 
     suspend fun insert(item: FlashCardItems) = db.getFlashCardDao().insert(item)
     suspend fun delete(item: FlashCardItems) = db.getFlashCardDao().delete(item)
+    suspend fun update(item: FlashCardItems) = db.getFlashCardDao().update(item)
 
     fun allFlashCardItems() = db.getFlashCardDao().getAllFlashCardItems()
 }
@@ -173,6 +179,11 @@ class FlashCardViewModel(private var repository: FlashCardRepository) : ViewMode
     @OptIn(DelicateCoroutinesApi::class)
     fun delete(item: FlashCardItems) = GlobalScope.launch {
         repository.delete(item)
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun update(item: FlashCardItems) = GlobalScope.launch {
+        repository.update(item)
     }
 
     //Here we initialized allFlashCardItems function with repository
