@@ -107,8 +107,7 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                 startActivity(intent)
                 finish()
             }
-        }
-        timer.start()
+        }.start()
 
         // initialize the gesture detector variable
         gestureDetector = GestureDetector(this, this)

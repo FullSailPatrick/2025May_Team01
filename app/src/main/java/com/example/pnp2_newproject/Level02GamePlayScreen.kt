@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import kotlin.math.abs
 import android.os.CountDownTimer
 import android.widget.Button
+import androidx.core.view.isVisible
 
 //include gesture detector
 class Level02GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureListener {
@@ -21,6 +22,7 @@ class Level02GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
     private lateinit var THEFLASHCARD: androidx.cardview.widget.CardView
     private lateinit var FlashCardText: TextView
     private lateinit var gestureDetector: GestureDetector
+    private lateinit var timer: CountDownTimer
     private val swipeThreshold = 100
     private val swipeVelocityThreshold = 100
     var correctAnswers = 0
@@ -91,7 +93,7 @@ class Level02GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
         //timer code here
         val timerTextView = findViewById<TextView>(R.id.timerTextView)
 
-        val timer = object: CountDownTimer(60000, 1000) {
+        timer = object: CountDownTimer(60000, 1000) {
             override fun onTick(millisUnitlFinished: Long) {
                 val secondsLeft = millisUnitlFinished / 1000
                 timerTextView.text = "$secondsLeft"
@@ -104,8 +106,7 @@ class Level02GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                 startActivity(intent)
                 finish()
             }
-        }
-        timer.start()
+        }.start()
 
         // initialize the gesture detector variable
         gestureDetector = GestureDetector(this, this)
@@ -135,11 +136,11 @@ class Level02GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                     showingQuestion = !showingQuestion
                 }
         }
-        TimerManager.timerFinished.observe(this) {finished ->
-            if(finished) {
-                Toast.makeText(this,"Time For A Break", Toast.LENGTH_SHORT).show()
-            }
-        }
+
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        timer.cancel()
     }
 
     //override this method to recognize touch event
@@ -203,6 +204,7 @@ class Level02GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                 if (abs(diffY) > swipeThreshold && abs(velocityY) > swipeVelocityThreshold) {
                     if (diffY > 0) {
                         //make card slide down
+                        FlashCardText.isVisible = false
                         THEFLASHCARD.animate()
                             .setDuration(1000)
                             .yBy(300f)
@@ -219,6 +221,7 @@ class Level02GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                                     .translationY(0f)
                                     .setDuration(0)
                                     .start()
+                                FlashCardText.isVisible = true
                             }
                         TotalAnswers++
                         goToNextFlashCard()
@@ -227,6 +230,7 @@ class Level02GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                     else {
                         LoadQuestion()
                         LoadAnswer()
+                        FlashCardText.isVisible = false
                         //make card slide up
                         THEFLASHCARD.animate()
                             .setDuration(1000)
@@ -244,6 +248,7 @@ class Level02GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                                     .translationY(0f)
                                     .setDuration(0)
                                     .start()
+                                FlashCardText.isVisible = true
                             }
                         correctAnswers++
                         TotalAnswers++
