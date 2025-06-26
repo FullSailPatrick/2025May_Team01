@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -13,12 +12,23 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.room.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.room.ColumnInfo
+import androidx.room.Dao
+import androidx.room.Database
+import androidx.room.Delete
+import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.PrimaryKey
+import androidx.room.Query
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.Update
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 
 class CreateFlashCardsScreen : AppCompatActivity()
@@ -79,13 +89,16 @@ class CreateFlashCardsScreen : AppCompatActivity()
         {
             val intent = Intent(this, HomeScreen::class.java)
             startActivity(intent)
+            finish()
         }
 
-        TimerManager.timerFinished.observe(this) {finished ->
-            if(finished) {
-                Toast.makeText(this,"Time For A Break", Toast.LENGTH_SHORT).show()
-            }
+        val button = findViewById<Button>(R.id.PlayFlashCards)
+        button.setOnClickListener {
+            val intent = Intent(this, FlashCardGame::class.java)
+            startActivity(intent)
+            finish()
         }
+
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

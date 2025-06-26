@@ -6,12 +6,12 @@
     <EditText
         android:id="@+id/edit_question_input"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="Edit Question" />
 
     <EditText
         android:id="@+id/edit_answer_input"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="Edit Answer" />
 </LinearLayout>
