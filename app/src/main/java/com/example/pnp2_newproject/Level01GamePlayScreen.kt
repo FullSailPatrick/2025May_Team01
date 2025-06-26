@@ -98,8 +98,8 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
             override fun onTick(millisUnitlFinished: Long) {
                 val secondsLeft = millisUnitlFinished / 1000
                 timerTextView.text = "$secondsLeft"
-
             }
+
             override fun onFinish() {
                 val intent = Intent(this@Level01GamePlayScreen, PlayerResultsScreen::class.java)
                 intent.putExtra("correctAnswers", correctAnswers)
