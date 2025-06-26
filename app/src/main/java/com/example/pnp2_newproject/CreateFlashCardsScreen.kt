@@ -5,8 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
-import android.widget.ImageButton
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -14,12 +12,23 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.room.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.room.ColumnInfo
+import androidx.room.Dao
+import androidx.room.Database
+import androidx.room.Delete
+import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.PrimaryKey
+import androidx.room.Query
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.Update
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 
 class CreateFlashCardsScreen : AppCompatActivity()
@@ -50,17 +59,20 @@ class CreateFlashCardsScreen : AppCompatActivity()
 
         // Initialised View Model
         viewModel = ViewModelProvider(this, factory)[FlashCardViewModel::class.java]
-        val flashcardAdapter = FlashCardAdapter(listOf(), viewModel)
+        val flashcardAdapter = FlashCardAdapter(viewModel)
         rvList.layoutManager = LinearLayoutManager(this)
         rvList.adapter = flashcardAdapter
 
         // To display all items in recycler view
         viewModel.allFlashCardItems().observe(this)
         {
-            flashcardAdapter.list = it
-            flashcardAdapter.notifyItemInserted(flashcardAdapter.list.size)
-            flashcardAdapter.notifyItemRemoved(flashcardAdapter.list.size)
-            flashcardAdapter.notifyItemChanged(flashcardAdapter.list.size)
+            val flashcardAdapter = FlashCardAdapter(viewModel)
+            rvList.layoutManager = LinearLayoutManager(this)
+            rvList.adapter = flashcardAdapter
+
+            viewModel.allFlashCardItems().observe(this) {
+                flashcardAdapter.submitList(it)
+            }
 
             // on ClickListener on button to open dialog box
             btnAdd.setOnClickListener()
@@ -77,13 +89,16 @@ class CreateFlashCardsScreen : AppCompatActivity()
         {
             val intent = Intent(this, HomeScreen::class.java)
             startActivity(intent)
+            finish()
         }
 
-        TimerManager.timerFinished.observe(this) {finished ->
-            if(finished) {
-                Toast.makeText(this,"Time For A Break", Toast.LENGTH_SHORT).show()
-            }
+        val button = findViewById<Button>(R.id.PlayFlashCards)
+        button.setOnClickListener {
+            val intent = Intent(this, FlashCardGame::class.java)
+            startActivity(intent)
+            finish()
         }
+
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -125,6 +140,9 @@ interface FlashCardDao {
     @Delete
     suspend fun delete(item: FlashCardItems)
 
+    @Update
+    suspend fun update(item: FlashCardItems)
+
     // getAllFlashCardItems function is used to get all the data of database.
     @Query("SELECT * FROM flashcard_items")
     fun getAllFlashCardItems(): LiveData<List<FlashCardItems>>
@@ -157,6 +175,7 @@ class FlashCardRepository(private var db: FlashCardDatabase) {
 
     suspend fun insert(item: FlashCardItems) = db.getFlashCardDao().insert(item)
     suspend fun delete(item: FlashCardItems) = db.getFlashCardDao().delete(item)
+    suspend fun update(item: FlashCardItems) = db.getFlashCardDao().update(item)
 
     fun allFlashCardItems() = db.getFlashCardDao().getAllFlashCardItems()
 }
@@ -173,6 +192,11 @@ class FlashCardViewModel(private var repository: FlashCardRepository) : ViewMode
     @OptIn(DelicateCoroutinesApi::class)
     fun delete(item: FlashCardItems) = GlobalScope.launch {
         repository.delete(item)
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun update(item: FlashCardItems) = GlobalScope.launch {
+        repository.update(item)
     }
 
     //Here we initialized allFlashCardItems function with repository
