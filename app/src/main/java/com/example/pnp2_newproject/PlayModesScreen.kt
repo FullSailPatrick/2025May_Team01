@@ -33,7 +33,7 @@ class PlayModesScreen : AppCompatActivity()
         //connect variables to actual buttons
         backButton = findViewById<Button>(R.id.backBtn)
         questButton = findViewById<Button>(R.id.questModeBtn)
-        freePlayButton = findViewById<Button>(R.id.freePlayModeBtn)
+        //freePlayButton = findViewById<Button>(R.id.freePlayModeBtn)
 
         //set click listener for buttons
         backButton.setOnClickListener()
@@ -55,16 +55,16 @@ class PlayModesScreen : AppCompatActivity()
                }
        }
 
-       freePlayButton.setOnClickListener()
-       {
-           freePlayButton.animate()
-               .setDuration(1000)
-               .rotationYBy(360f)
-               .withEndAction {
-                   //val intent = Intent(this, FreePlayScreen::class.java)
-                   //startActivity(intent)
-               }
-       }
+      // freePlayButton.setOnClickListener()
+      // {
+          // freePlayButton.animate()
+          //     .setDuration(1000)
+          //     .rotationYBy(360f)
+          //     .withEndAction {
+          //         //val intent = Intent(this, FreePlayScreen::class.java)
+          //         //startActivity(intent)
+          //     }
+       //}
 
     }
 }

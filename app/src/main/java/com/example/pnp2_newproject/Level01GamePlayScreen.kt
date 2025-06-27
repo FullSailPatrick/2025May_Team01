@@ -137,11 +137,6 @@ class Level01GamePlayScreen : AppCompatActivity(), GestureDetector.OnGestureList
                     showingQuestion = !showingQuestion
                 }
         }
-        TimerManager.timerFinished.observe(this) {finished ->
-            if(finished) {
-                Toast.makeText(this,"Time For A Break", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     override fun onDestroy() {

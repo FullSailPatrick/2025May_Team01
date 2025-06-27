@@ -40,14 +40,19 @@ class HomeScreen : AppCompatActivity()
         //connect variables to actual buttons
         createBtn = findViewById(R.id.create_button)
         settingsBtn = findViewById(R.id.settings_button)
-        favoritesBtn = findViewById(R.id.favorites_button)
+        //favoritesBtn = findViewById(R.id.favorites_button)
         playBtn = findViewById(R.id.play_button)
 
         //set click listener
         createBtn.setOnClickListener()
         {
-            val intent: Intent = Intent(this, CreateScreen::class.java)
-            startActivity(intent)
+            createBtn.animate()
+                    .setDuration(1000)
+                    .rotationYBy(360f)
+                    .withEndAction {
+                        val intent = Intent(this, CreateScreen::class.java)
+                        startActivity(intent)
+            }
         }
         settingsBtn.setOnClickListener()
         {
@@ -62,8 +67,13 @@ class HomeScreen : AppCompatActivity()
         //}
         playBtn.setOnClickListener()
         {
-            val intent: Intent = (Intent(this, PlayModesScreen::class.java))
-            startActivity(intent)
+            playBtn.animate()
+                .setDuration(1000)
+                .rotationYBy(360f)
+                .withEndAction {
+                    val intent = Intent(this, PlayModesScreen::class.java)
+                    startActivity(intent)
+                }
         }
         TimerManager.timerFinished.observe(this) {finished ->
             if(finished) {
